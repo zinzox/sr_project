@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+
+  <display-name>sarbi_rohek</display-name>
+
+  <servlet>
+    <servlet-name>RegisterVerificationServlet</servlet-name>
+    <servlet-class>RegisterVerificationServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RegisterVerificationServlet</servlet-name>
+    <url-pattern>/api/register</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>LoginVerificationServlet</servlet-name>
+    <servlet-class>LoginVerificationServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LoginVerificationServlet</servlet-name>
+    <url-pattern>/api/login</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>ProviderProfileServlet</servlet-name>
+    <servlet-class>ProviderProfileServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProviderProfileServlet</servlet-name>
+    <url-pattern>/api/provider-profile</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>AdminAccountsServlet</servlet-name>
+    <servlet-class>AdminAccountsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AdminAccountsServlet</servlet-name>
+    <url-pattern>/api/admin/accounts</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>AuthStatusServlet</servlet-name>
+    <servlet-class>AuthStatusServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AuthStatusServlet</servlet-name>
+    <url-pattern>/api/auth/status</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>CurrentUserProfileServlet</servlet-name>
+    <servlet-class>CurrentUserProfileServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CurrentUserProfileServlet</servlet-name>
+    <url-pattern>/api/auth/profile</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>FeaturedProvidersServlet</servlet-name>
+    <servlet-class>FeaturedProvidersServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>FeaturedProvidersServlet</servlet-name>
+    <url-pattern>/api/providers/featured</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>AllProvidersServlet</servlet-name>
+    <servlet-class>AllProvidersServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AllProvidersServlet</servlet-name>
+    <url-pattern>/api/providers/all</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>LogoutServlet</servlet-name>
+    <servlet-class>LogoutServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LogoutServlet</servlet-name>
+    <url-pattern>/api/auth/logout</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>MessagingServlet</servlet-name>
+    <servlet-class>MessagingServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MessagingServlet</servlet-name>
+    <url-pattern>/api/messages/*</url-pattern>
+  </servlet-mapping>
+
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+
+</web-app>

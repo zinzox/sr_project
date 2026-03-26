@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Gestion Comptes</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <main class="admin-page">
+    <header class="admin-head">
+      <h1>Zone Admin</h1>
+      <p>Suppression immediate des comptes clients et prestataires depuis la base MySQL.</p>
+      <p id="adminStatus" class="status">Verification d'acces...</p>
+    </header>
+
+    <section class="admin-filters">
+      <label>
+        Role
+        <select id="filterRole">
+          <option value="ALL">Tous</option>
+          <option value="CLIENT">Client</option>
+          <option value="PROVIDER">Prestataire</option>
+        </select>
+      </label>
+
+      <label>
+        Type prestataire
+        <select id="filterServiceType">
+          <option value="ALL">Tous</option>
+          <option value="ARTISANT">Artisant</option>
+          <option value="FREELANCER">Freelancer</option>
+          <option value="VIDEO_MAKER">Video maker</option>
+        </select>
+      </label>
+
+      <label>
+        Age min
+        <input id="filterAgeMin" type="number" min="0" placeholder="16" />
+      </label>
+
+      <label>
+        Age max
+        <input id="filterAgeMax" type="number" min="0" placeholder="100" />
+      </label>
+    </section>
+
+    <section class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Role</th>
+            <th>Nom</th>
+            <th>Age</th>
+            <th>Email</th>
+            <th>Telephone</th>
+            <th>Type</th>
+            <th>Cree le</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="accountsBody"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>

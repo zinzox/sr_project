@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Espace Prestataire — Sarbi Rohek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="provider-space.css?v=20260325-4" />
+</head>
+<body>
+  <main class="dashboard">
+    <header class="dashboard-top">
+      <div>
+        <p class="kicker">Espace prestataire</p>
+        <h1>Bienvenue sur votre espace</h1>
+        <p class="subtitle">Votre compte est actif. Vous pouvez maintenant gerer vos services.</p>
+      </div>
+      <div class="top-actions">
+        <span id="providerHelloName" class="hello-name">Bonjour</span>
+        <button id="providerLogoutBtn" class="btn ghost" type="button">Se deconnecter</button>
+      </div>
+    </header>
+
+    <section class="cards">
+      <article class="card">
+        <h2>Profil prestataire</h2>
+        <p>Compte connecte: <strong id="providerEmail">-</strong></p>
+        <p>Nom: <strong id="providerName">-</strong></p>
+        <p>Telephone: <strong id="providerPhone">-</strong></p>
+      </article>
+
+      <article class="card">
+        <h2>Activite</h2>
+        <p>Service: <strong id="providerServiceType">-</strong></p>
+        <p>Activite principale: <strong id="providerMainActivity">-</strong></p>
+        <p>Titre: <strong id="providerWorkTitle">-</strong></p>
+      </article>
+
+      <article class="card">
+        <h2>Description</h2>
+        <p id="providerWorkDescription">Chargement des informations...</p>
+      </article>
+
+      <article class="card">
+        <h2>Photo du profil</h2>
+        <img id="providerPhoto" class="provider-photo" alt="Photo prestataire" src="logo.png" />
+        <label class="photo-label" for="photoUrlInput">Lien image (URL)</label>
+        <input id="photoUrlInput" class="photo-input" type="url" placeholder="https://..." />
+        <button id="savePhotoBtn" class="btn ghost" type="button">Enregistrer la photo</button>
+        <p id="photoStatus" class="photo-status"></p>
+      </article>
+
+      <article class="card edit-card">
+        <h2>Modifier mon profil</h2>
+        <button id="editProfileToggleBtn" class="btn ghost" type="button">Modifier</button>
+
+        <form id="providerEditForm" class="edit-form" hidden>
+          <label>
+            Type de service
+            <select id="editServiceType">
+              <option value="SERVICE_PRO">Service pro</option>
+              <option value="ARTISANT">Artisant</option>
+              <option value="SERVICE_PERSONNALISE">Service personnalise</option>
+            </select>
+          </label>
+
+          <label>
+            Activite principale
+            <input id="editMainActivity" type="text" maxlength="120" placeholder="Ex: Electricien" />
+          </label>
+
+          <label>
+            Titre
+            <input id="editWorkTitle" type="text" maxlength="160" placeholder="Ex: Installation et depannage" />
+          </label>
+
+          <label>
+            Telephone
+            <input id="editPhone" type="text" maxlength="40" placeholder="Ex: 0612345678" />
+          </label>
+
+          <label>
+            Description
+            <textarea id="editWorkDescription" rows="4" maxlength="2000" placeholder="Decrivez vos services..."></textarea>
+          </label>
+
+          <div class="edit-actions">
+            <button class="btn ghost" type="submit">Enregistrer</button>
+            <button id="cancelEditProfileBtn" class="btn ghost" type="button">Annuler</button>
+          </div>
+        </form>
+
+        <p id="editProfileStatus" class="edit-status"></p>
+      </article>
+    </section>
+
+    <section class="messages-dashboard">
+      <h2>Messages recus</h2>
+      <div class="messages-layout">
+        <aside class="messages-list">
+          <div id="providerConversations" class="provider-conversations"></div>
+        </aside>
+
+        <section class="messages-thread">
+          <div id="providerThreadHeader" class="thread-header">Selectionnez une conversation</div>
+          <div id="providerThreadMessages" class="thread-messages"></div>
+          <form id="providerThreadForm" class="thread-form">
+            <input id="providerThreadInput" type="text" placeholder="Repondre..." maxlength="2000" />
+            <button class="btn ghost" type="submit">Envoyer</button>
+          </form>
+          <p id="providerThreadStatus" class="thread-status"></p>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="provider-space.js?v=20260325-4"></script>
+</body>
+</html>

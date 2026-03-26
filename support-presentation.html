@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support de Presentation - Sarbi Rohek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f6fbff;
+      --paper: #ffffff;
+      --text: #1d2d3a;
+      --muted: #5f7388;
+      --primary: #0f6fdc;
+      --primary-soft: #e6f1ff;
+      --accent: #15a283;
+      --accent-soft: #e8fbf6;
+      --line: #d8e7f5;
+      --shadow: 0 18px 40px rgba(18, 78, 140, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 0% 0%, #dbedff 0%, transparent 40%),
+        radial-gradient(circle at 100% 0%, #dcfff3 0%, transparent 34%),
+        linear-gradient(180deg, #f5fbff 0%, #ffffff 42%, #f4fffb 100%);
+      line-height: 1.6;
+    }
+
+    .container {
+      width: min(1100px, 92vw);
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(8px);
+      background: rgba(246, 251, 255, 0.88);
+      border-bottom: 1px solid rgba(15, 111, 220, 0.12);
+    }
+
+    .topbar-wrap {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 12px 0;
+    }
+
+    .brand {
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      color: var(--primary);
+    }
+
+    .menu {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .menu a,
+    .menu button {
+      border: 0;
+      text-decoration: none;
+      background: var(--paper);
+      color: var(--text);
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 999px;
+      padding: 8px 12px;
+      box-shadow: 0 8px 18px rgba(15, 111, 220, 0.08);
+      cursor: pointer;
+    }
+
+    .menu a:hover,
+    .menu button:hover {
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .hero {
+      padding: 56px 0 26px;
+    }
+
+    .hero-card {
+      background: var(--paper);
+      border: 1px solid #e9f2fb;
+      border-radius: 22px;
+      padding: 34px;
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 16px;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 999px;
+      padding: 6px 12px;
+    }
+
+    h1 {
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1.15;
+      max-width: 16ch;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      max-width: 70ch;
+      font-size: 16px;
+    }
+
+    .meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    section {
+      padding: 30px 0;
+    }
+
+    .section-title {
+      font-size: 28px;
+      margin-bottom: 14px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid #e4eef8;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 10px 26px rgba(15, 111, 220, 0.08);
+    }
+
+    .card h3 {
+      font-size: 17px;
+      margin-bottom: 8px;
+      color: #124b7f;
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .card ul {
+      padding-left: 18px;
+      display: grid;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 13px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(180deg, #7db7ff 0%, #86d9c6 100%);
+    }
+
+    .step {
+      position: relative;
+      margin-left: 40px;
+      background: var(--paper);
+      border: 1px solid #deebf8;
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 8px 22px rgba(15, 111, 220, 0.08);
+    }
+
+    .step::before {
+      content: "";
+      position: absolute;
+      left: -33px;
+      top: 17px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 4px solid var(--primary);
+    }
+
+    .step h3 {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 18px;
+      color: #0f4f87;
+      margin-bottom: 8px;
+    }
+
+    .step h3 span {
+      font-size: 13px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .step p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .step ul {
+      padding-left: 18px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .method {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .method-item {
+      border: 1px dashed #c8ddf2;
+      border-radius: 16px;
+      padding: 16px;
+      background: linear-gradient(180deg, #ffffff 0%, #f7fcff 100%);
+    }
+
+    .method-item h4 {
+      color: #0f4f87;
+      margin-bottom: 8px;
+    }
+
+    .file-evidence {
+      background: #0f2537;
+      color: #def0ff;
+      border-radius: 18px;
+      padding: 18px;
+      overflow: auto;
+    }
+
+    .file-evidence code {
+      display: block;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      white-space: pre;
+    }
+
+    .footer {
+      margin: 26px 0 42px;
+      border-radius: 18px;
+      background: var(--paper);
+      border: 1px solid #e3edf8;
+      padding: 20px;
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .footer strong {
+      color: var(--text);
+    }
+
+    @media (max-width: 900px) {
+      .cards,
+      .method {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card {
+        padding: 24px;
+      }
+
+      .step {
+        margin-left: 34px;
+      }
+
+      .timeline::before {
+        left: 9px;
+      }
+
+      .step::before {
+        left: -29px;
+      }
+    }
+
+    @media print {
+      .topbar {
+        display: none;
+      }
+
+      body {
+        background: #fff;
+      }
+
+      .hero,
+      section {
+        padding: 12px 0;
+      }
+
+      .hero-card,
+      .card,
+      .step,
+      .footer {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-wrap">
+      <div class="brand">Support Projet - Sarbi Rohek</div>
+      <nav class="menu">
+        <a href="#resume">Resume</a>
+        <a href="#iterations">Iterations</a>
+        <a href="#methode">Methode</a>
+        <a href="#infra">Tomcat-MySQL</a>
+        <a href="#preuves">Preuves</a>
+        <button type="button" id="printBtn">Imprimer PDF</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero" id="resume">
+      <article class="hero-card">
+        <div class="badge-row">
+          <span class="badge">Projet academique</span>
+          <span class="badge">Web Java + Frontend</span>
+          <span class="badge">Version demonstrable</span>
+        </div>
+        <h1>Presentation du projet Sarbi Rohek</h1>
+        <p class="subtitle">
+          Plateforme de mise en relation entre clients et prestataires, avec une experience separee
+          pour chaque role (client, prestataire, admin), un systeme d'authentification et des interactions
+          en temps reel via messagerie.
+        </p>
+        <div class="meta">
+          <div><strong>Projet:</strong> Sarbi Rohek</div>
+        </div>
+      </article>
+    </section>
+
+    <section>
+      <h2 class="section-title">Objectifs et valeur du projet</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>Probleme cible</h3>
+          <p>
+            Difficulte a trouver des prestataires fiables rapidement et a gerer les echanges dans une interface unique.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Solution proposee</h3>
+          <p>
+            Un portail simple avec recherche de prestataires, profils verifies, espaces dedies par role et messagerie.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Resultat attendu</h3>
+          <p>
+            Ameliorer la confiance, gagner du temps et structurer la relation client-prestataire avec un suivi clair.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="iterations">
+      <h2 class="section-title">Timeline des iterations (ce que j'ai fait)</h2>
+      <div class="timeline">
+        <article class="step">
+          <h3>Iteration 1 - Base du projet</h3>
+          <p>Mise en place de la structure globale et des pages principales.</p>
+          <ul>
+            <li>Creation de la page d'accueil et de l'identite visuelle.</li>
+            <li>Organisation frontend (HTML/CSS/JS) et backend (Servlets Java).</li>
+          </ul>
+        </article>
+
+        <article class="step">
+          <h3>Iteration 2 - Authentification</h3>
+          <p>Developpement du flux d'inscription et de connexion.</p>
+          <ul>
+            <li>Verification d'inscription et de connexion cote serveur.</li>
+            <li>Gestion de session utilisateur et deconnexion securisee.</li>
+          </ul>
+        </article>
+
+        <article class="step">
+          <h3>Iteration 3 - Espaces par role</h3>
+          <p>Separation des experiences pour chaque type d'utilisateur.</p>
+          <ul>
+            <li>Creation des interfaces client, prestataire et administrateur.</li>
+            <li>Adaptation des fonctionnalites selon le role connecte.</li>
+          </ul>
+        </article>
+
+        <article class="step">
+          <h3>Iteration 4 - Profils et catalogue</h3>
+          <p>Ajout des donnees metier autour des prestataires.</p>
+          <ul>
+            <li>Consultation des profils et des prestataires mis en avant.</li>
+            <li>Mise en place d'une couche repository pour l'acces aux donnees.</li>
+          </ul>
+        </article>
+
+        <article class="step">
+          <h3>Iteration 5 - Communication</h3>
+          <p>Integration de la messagerie et des verifications d'etat.</p>
+          <ul>
+            <li>Envoi/reception de messages entre utilisateurs.</li>
+            <li>Verification de l'etat d'authentification en continu.</li>
+          </ul>
+        </article>
+
+        <article class="step">
+          <h3>Iteration 6 - Stabilisation et UI</h3>
+          <p>Finalisation de l'ergonomie et corrections de coherence.</p>
+          <ul>
+            <li>Amelioration du design des pages principales.</li>
+            <li>Tests de parcours utilisateur de bout en bout.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="methode">
+      <h2 class="section-title">Comment j'ai realise le projet</h2>
+      <div class="method">
+        <article class="method-item">
+          <h4>1. Analyse et decoupage</h4>
+          <p>
+            J'ai decoupe le besoin en modules: authentification, gestion des profils, espaces par role et messagerie.
+            Chaque module a ete developpe de facon iterative pour garder une progression mesurable.
+          </p>
+        </article>
+        <article class="method-item">
+          <h4>2. Implementation progressive</h4>
+          <p>
+            J'ai commence par une version minimale fonctionnelle, puis j'ai ajoute les features une par une,
+            en validant chaque etape avant de passer a la suivante.
+          </p>
+        </article>
+        <article class="method-item">
+          <h4>3. Liens Frontend/Backend</h4>
+          <p>
+            Les pages JavaScript appellent des servlets dedies pour verifier les comptes, recuperer les donnees
+            et alimenter les vues client/prestataire/admin.
+          </p>
+        </article>
+        <article class="method-item">
+          <h4>4. Verification et amelioration</h4>
+          <p>
+            A chaque iteration, j'ai teste les parcours principaux (inscription, connexion, navigation, messages),
+            puis j'ai corrige les points bloquants et ameliore l'interface.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="infra">
+      <h2 class="section-title">Tomcat, MySQL et connexion entre les deux</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>Ou se trouve la base</h3>
+          <p>
+            La base s'appelle <strong>sarbi_rohek</strong> et tourne sur MySQL local
+            (<strong>localhost:3306</strong>). Les donnees physiques sont stockees dans
+            le dossier data de MySQL (exemple courant sous Windows:
+            <strong>C:/ProgramData/MySQL/.../Data/sarbi_rohek</strong> selon ton installation).
+          </p>
+        </article>
+        <article class="card">
+          <h3>Tomcat et application</h3>
+          <p>
+            Le projet est deploye sous Tomcat dans
+            <strong>webapps/sarbi_rohek</strong>. Les pages frontend appellent les servlets
+            (par exemple /api/register et /api/login), Tomcat execute ensuite la logique Java.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Comment la connexion est faite</h3>
+          <p>
+            La classe repository charge le driver MySQL puis ouvre les connexions JDBC avec
+            DriverManager (URL, user, password). Les servlets passent par cette couche pour lire
+            et ecrire dans les tables <strong>providers</strong> et <strong>messages</strong>.
+          </p>
+        </article>
+      </div>
+
+      <div style="height: 14px;"></div>
+
+      <h3 class="section-title" style="font-size: 22px; margin-bottom: 10px;">Pourquoi Tomcat et pourquoi MySQL ?</h3>
+      <div class="cards">
+        <article class="card">
+          <h3>Pourquoi Tomcat</h3>
+          <ul>
+            <li>Tomcat est adapte aux applications Java basees sur Servlets/JSP.</li>
+            <li>Il est leger, stable et simple a deployer dans un contexte academique.</li>
+            <li>Il gere nativement les sessions utilisateur, utiles pour login/logout.</li>
+            <li>Il facilite l'exposition d'API comme /api/register et /api/login.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Pourquoi MySQL</h3>
+          <ul>
+            <li>MySQL est un SGBD relationnel fiable pour stocker comptes et messages.</li>
+            <li>Il est tres compatible avec Java via JDBC et mysql-connector-j.</li>
+            <li>Il permet des requetes SQL claires (SELECT, INSERT, UPDATE, DELETE).</li>
+            <li>Il est facile a administrer localement pour developpement et demo.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Pourquoi ce duo ensemble</h3>
+          <p>
+            Tomcat execute la logique metier Java, et MySQL conserve les donnees persistantes.
+            Cette separation (serveur applicatif + base relationnelle) donne une architecture
+            claire, evolutive et facile a maintenir.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="preuves">
+      <h2 class="section-title">Preuves techniques (fichiers cles)</h2>
+      <div class="file-evidence">
+        <code>
+Frontend
+- index.html / styles.css / index-landing.js
+- login.html / login.css / login.js
+- register.html / register.css / register.js
+- client-space.html / client-space.css / client-space.js
+- provider-space.html / provider-space.css / provider-space.js
+- admin.html / admin.css / admin.js
+
+Backend Java (Servlets)
+- RegisterVerificationServlet.java
+- LoginVerificationServlet.java
+- AuthStatusServlet.java
+- LogoutServlet.java
+- CurrentUserProfileServlet.java
+- ProviderProfileServlet.java
+- FeaturedProvidersServlet.java
+- AllProvidersServlet.java
+- AdminAccountsServlet.java
+- MessagingServlet.java
+
+Acces donnees
+- ProviderRepository.java
+        </code>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">Conclusion</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>Bilan</h3>
+          <p>Le projet couvre un cycle complet: authentification, gestion des roles, contenu metier et communication.</p>
+        </article>
+        <article class="card">
+          <h3>Points forts</h3>
+          <ul>
+            <li>Architecture claire entre interface et logique serveur.</li>
+            <li>Parcours utilisateur complets pour les roles principaux.</li>
+            <li>Evolution du projet par iterations maitrisees.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Prochaines evolutions</h3>
+          <ul>
+            <li>Systeme d'avis et de notation avance.</li>
+            <li>Notifications en direct.</li>
+            <li>Tableau de bord analytique admin.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    
+  </main>
+
+  <script>
+    const printBtn = document.getElementById("printBtn");
+    if (printBtn) {
+      printBtn.addEventListener("click", () => window.print());
+    }
+  </script>
+</body>
+</html>

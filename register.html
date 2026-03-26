@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Inscription — Sarbi Rohek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="register.css?v=20260324-1" />
+</head>
+<body>
+  <main class="auth-page">
+    <section class="auth-layout">
+      <article class="auth-panel">
+        <p class="kicker">Nouveau compte</p>
+        <h2>Commencez a vendre ou commander en quelques minutes</h2>
+        <p class="panel-text">
+          Un profil unique pour publier vos services, suivre vos demandes et echanger avec vos clients.
+        </p>
+        <ul class="panel-list">
+          <li>Profil verifie et informations securisees</li>
+          <li>Tableau de bord simple et rapide</li>
+          <li>Support local disponible</li>
+        </ul>
+      </article>
+
+      <article class="auth-card">
+        <p class="design-version">NOUVEAU DESIGN V2 - 24/03/2026</p>
+        <a class="btn ghost back-btn" href="index.html">Retour a l'accueil</a>
+        <div class="auth-head">
+          <h1>Inscription</h1>
+          <p>Remplissez les informations pour creer votre compte.</p>
+        </div>
+
+        <p id="flashMessage" class="flash-message" hidden></p>
+
+        <form id="registerForm" class="auth-form" action="/sarbi_rohek/api/register" method="post">
+          <div class="field-grid two-col">
+            <label>
+              Prenom
+              <input type="text" name="firstName" minlength="2" placeholder="Votre prenom" required />
+            </label>
+
+            <label>
+              Nom
+              <input type="text" name="lastName" minlength="2" placeholder="Votre nom" required />
+            </label>
+
+            <label>
+              Telephone
+              <input type="tel" name="phone" placeholder="+216 12 345 678" required />
+            </label>
+
+            <label>
+              Age
+              <input type="number" name="age" min="16" max="100" placeholder="Ex: 28" required />
+            </label>
+          </div>
+
+          <label>
+            Adresse email
+            <input type="email" name="email" placeholder="exemple@email.com" required />
+          </label>
+
+          <label>
+            Type de compte
+            <select id="role" name="role" required>
+              <option value="">Choisir</option>
+              <option value="CLIENT">Client</option>
+              <option value="PROVIDER">Prestataire</option>
+            </select>
+          </label>
+
+          <section id="providerFields" class="provider-only" hidden>
+            <h3>Informations prestataire</h3>
+            <p class="provider-hint">Ces informations seront ajoutees dans la base de donnees prestataires.</p>
+
+            <div class="field-grid two-col">
+              <label>
+                CIN
+                <input type="text" name="cin" placeholder="Ex: 12345678" />
+              </label>
+
+              <label>
+                Type d'activite
+                <select name="serviceType">
+                  <option value="">Choisir une activite</option>
+                  <option value="ARTISANT">Artisant</option>
+                  <option value="FREELANCER">Freelancer</option>
+                  <option value="VIDEO_MAKER">Video maker</option>
+                </select>
+              </label>
+            </div>
+
+            <label>
+              Activite principale
+              <input type="text" name="mainActivity" placeholder="Ce que vous faites principalement" />
+            </label>
+
+            <div class="field-grid two-col">
+              <label>
+                Titre du travail
+                <input type="text" name="workTitle" placeholder="Ex: Reparation climatiseur" />
+              </label>
+
+              <label>
+                Description du travail
+                <textarea name="workDescription" rows="4" placeholder="Expliquez votre service, votre methode, votre experience..."></textarea>
+              </label>
+            </div>
+          </section>
+
+          <div class="field-grid two-col">
+            <label>
+              Mot de passe
+              <input type="password" name="password" minlength="8" placeholder="Minimum 8 caracteres" required />
+            </label>
+
+            <label>
+              Confirmation du mot de passe
+              <input type="password" name="confirmPassword" minlength="8" placeholder="Retapez le mot de passe" required />
+            </label>
+          </div>
+
+          <label class="agreement">
+            <input type="checkbox" required />
+            J'accepte les conditions d'utilisation et la politique de confidentialite.
+          </label>
+
+          <div class="auth-actions">
+            <button class="btn primary" type="submit">S'inscrire</button>
+            <a class="btn outline" href="login.html">J'ai deja un compte</a>
+          </div>
+        </form>
+
+        <p class="auth-alt">
+          Vous avez deja un compte ?
+          <a href="login.html">Connexion</a>
+        </p>
+      </article>
+    </section>
+  </main>
+  <script src="register.js?v=20260325-5"></script>
+</body>
+</html>

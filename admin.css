@@ -1,0 +1,104 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: linear-gradient(120deg, #eef7ff, #f9f3ff);
+  color: #1b2430;
+}
+
+.admin-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.admin-head {
+  background: #ffffff;
+  border: 1px solid #dbe6f4;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.admin-head h1 {
+  margin: 0 0 8px;
+}
+
+.status {
+  margin: 10px 0 0;
+  font-weight: 600;
+  color: #0b5c85;
+}
+
+.admin-filters {
+  background: #ffffff;
+  border: 1px solid #dbe6f4;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 14px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.admin-filters label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.admin-filters select,
+.admin-filters input {
+  border: 1px solid #cdddf3;
+  border-radius: 8px;
+  padding: 8px;
+  font: inherit;
+}
+
+.admin-table-wrap {
+  background: #ffffff;
+  border: 1px solid #dbe6f4;
+  border-radius: 14px;
+  overflow: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.admin-table th,
+.admin-table td {
+  border-bottom: 1px solid #edf1f6;
+  padding: 12px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.admin-table th {
+  background: #f7faff;
+}
+
+.btn-delete {
+  background: #d7263d;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.btn-delete:hover {
+  filter: brightness(0.95);
+}
+
+@media (max-width: 920px) {
+  .admin-filters {
+    grid-template-columns: repeat(2, minmax(160px, 1fr));
+  }
+}

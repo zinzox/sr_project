@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Espace Client — Sarbi Rohek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="client-space.css?v=20260325-5" />
+</head>
+<body>
+  <main class="client-page">
+    <header class="client-top">
+      <div>
+        <p class="kicker">Espace client</p>
+        <h1>Marketplace des prestataires</h1>
+        <p class="subtitle">Parcourez, filtrez et ouvrez chaque fiche pour plus de details.</p>
+      </div>
+      <div class="top-actions">
+        <button id="openMessagesBtn" class="btn ghost" type="button">Messages</button>
+        <span id="clientHelloName" class="hello-name">Bonjour</span>
+        <button id="clientLogoutBtn" class="btn ghost" type="button">Se deconnecter</button>
+      </div>
+    </header>
+
+    <section id="messengerPanel" class="messenger" hidden>
+      <aside class="messenger-list">
+        <div class="messenger-title">Conversations</div>
+        <div id="conversationsList" class="conversations-list"></div>
+      </aside>
+
+      <section class="messenger-thread">
+        <div id="threadHeader" class="thread-header">Selectionnez une conversation</div>
+        <div id="threadMessages" class="thread-messages"></div>
+        <form id="threadForm" class="thread-form">
+          <input id="threadInput" type="text" placeholder="Ecrire un message..." maxlength="2000" />
+          <button class="btn ghost" type="submit">Envoyer</button>
+        </form>
+        <p id="threadStatus" class="thread-status"></p>
+      </section>
+    </section>
+
+    <section class="filters">
+      <label>
+        Type de service
+        <select id="filterServiceType">
+          <option value="ALL">Tous</option>
+          <option value="SERVICE_PRO">Service pro</option>
+          <option value="ARTISANT">Artisant</option>
+          <option value="SERVICE_PERSONNALISE">Service personnalise</option>
+        </select>
+      </label>
+
+      <label>
+        Mot cle
+        <input id="filterKeyword" type="text" placeholder="Nom, activite, description..." />
+      </label>
+    </section>
+
+    <p id="providersStatus" class="status">Chargement des prestataires...</p>
+    <section id="providersGrid" class="providers-grid"></section>
+  </main>
+
+  <script src="client-space.js?v=20260325-6"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+*.class
+WEB-INF/classes/
+WEB-INF/lib/
+*.log
+.DS_Store
+Thumbs.db
