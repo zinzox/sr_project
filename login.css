@@ -140,6 +140,12 @@ body {
   border: 1px solid #bdebdc;
 }
 
+.flash-contact-link {
+  color: #7d140d;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 .auth-form {
   display: grid;
   gap: 14px;

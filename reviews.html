@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avis & Évaluations — Sarbi Rohek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="client-space.css" />
+  <style>
+    .reviews-container { padding: 20px; }
+    .rating-summary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; border-radius: 8px; margin-bottom: 30px; }
+    .rating-main { display: grid; grid-template-columns: 1fr 2fr; gap: 40px; align-items: center; }
+    .rating-score { text-align: center; }
+    .rating-number { font-size: 4em; font-weight: 700; }
+    .star-rating { color: #ffc107; font-size: 1.5em; margin: 10px 0; }
+    .rating-count { opacity: 0.9; }
+    .rating-bars { display: flex; flex-direction: column; gap: 10px; }
+    .rating-bar-item { display: flex; align-items: center; gap: 10px; }
+    .rating-label { min-width: 50px; text-align: right; }
+    .rating-bar { flex: 1; height: 20px; background: rgba(255,255,255,0.3); border-radius: 10px; overflow: hidden; }
+    .rating-fill { height: 100%; background: #ffc107; }
+    .review-form { background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+    .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: Poppins, sans-serif; }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .star-picker { display: flex; gap: 5px; font-size: 2em; }
+    .star { cursor: pointer; opacity: 0.3; transition: opacity 0.2s; }
+    .star:hover, .star.selected { opacity: 1; color: #ffc107; }
+    .reviews-list { display: grid; gap: 15px; }
+    .review-card { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 20px; }
+    .review-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
+    .reviewer-info { display: flex; gap: 10px; }
+    .reviewer-avatar { width: 40px; height: 40px; border-radius: 50%; background: #667eea; color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+    .reviewer-details { }
+    .reviewer-name { font-weight: 600; }
+    .review-date { font-size: 0.85em; color: #999; }
+    .review-rating { color: #ffc107; }
+    .review-text { line-height: 1.6; margin-bottom: 10px; }
+    .review-footer { display: flex; gap: 15px; font-size: 0.9em; }
+    .helpful-btn { background: none; border: none; cursor: pointer; color: #667eea; padding: 0; }
+    .helpful-btn:hover { text-decoration: underline; }
+    .filter-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .filter-btn { padding: 8px 15px; border: 1px solid #ddd; background: white; border-radius: 20px; cursor: pointer; transition: all 0.2s; }
+    .filter-btn.active { background: #667eea; color: white; border-color: #667eea; }
+  </style>
+</head>
+<body>
+  <main class="reviews-container">
+    <header>
+      <div style="margin-bottom: 20px;">
+        <p class="kicker">Votre réputation</p>
+        <h1>Avis & Évaluations</h1>
+        <p class="subtitle">Consultez les avis des clients et gérez votre réputation</p>
+      </div>
+      <a class="btn ghost" href="client-space.html">← Retour</a>
+    </header>
+
+    <!-- RÉSUMÉ DES ÉVALUATIONS -->
+    <section class="rating-summary">
+      <div class="rating-main">
+        <div class="rating-score">
+          <div class="rating-number" id="avgRating">4.8</div>
+          <div class="star-rating" id="totalStars">★★★★★</div>
+          <div class="rating-count"><span id="totalReviews">24</span> avis</div>
+        </div>
+        <div class="rating-bars">
+          <div class="rating-bar-item">
+            <span class="rating-label">5 ★</span>
+            <div class="rating-bar"><div class="rating-fill" style="width: 85%;"></div></div>
+            <span id="count5">20</span>
+          </div>
+          <div class="rating-bar-item">
+            <span class="rating-label">4 ★</span>
+            <div class="rating-bar"><div class="rating-fill" style="width: 12%;"></div></div>
+            <span id="count4">3</span>
+          </div>
+          <div class="rating-bar-item">
+            <span class="rating-label">3 ★</span>
+            <div class="rating-bar"><div class="rating-fill" style="width: 3%;"></div></div>
+            <span id="count3">1</span>
+          </div>
+          <div class="rating-bar-item">
+            <span class="rating-label">2 ★</span>
+            <div class="rating-bar"><div class="rating-fill" style="width: 0%;"></div></div>
+            <span id="count2">0</span>
+          </div>
+          <div class="rating-bar-item">
+            <span class="rating-label">1 ★</span>
+            <div class="rating-bar"><div class="rating-fill" style="width: 0%;"></div></div>
+            <span id="count1">0</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORMULAIRE POUR AJOUTER UN AVIS -->
+    <section class="module-card">
+      <h2>Ajouter un avis</h2>
+      <form id="reviewForm" class="review-form">
+        <div class="form-group">
+          <label>Email du prestataire *</label>
+          <input type="email" id="reviewEmail" placeholder="provider@email.com" required />
+        </div>
+        <div class="form-group">
+          <label>Votre note *</label>
+          <div class="star-picker" id="starPicker">
+            <span class="star" data-value="1">★</span>
+            <span class="star" data-value="2">★</span>
+            <span class="star" data-value="3">★</span>
+            <span class="star" data-value="4">★</span>
+            <span class="star" data-value="5">★</span>
+          </div>
+          <input type="hidden" id="selectedRating" value="0" required />
+        </div>
+        <div class="form-group">
+          <label>Votre avis *</label>
+          <textarea id="reviewText" placeholder="Partagez votre expérience..." required></textarea>
+        </div>
+        <button type="submit" class="btn primary">Publier mon avis</button>
+        <p id="reviewFormStatus" class="module-status"></p>
+      </form>
+    </section>
+
+    <!-- FILTRES -->
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterReviews('all')">Tous les avis</button>
+      <button class="filter-btn" onclick="filterReviews(5)">★★★★★ 5 étoiles</button>
+      <button class="filter-btn" onclick="filterReviews(4)">★★★★☆ 4+ étoiles</button>
+      <button class="filter-btn" onclick="filterReviews(3)">★★★☆☆ 3+ étoiles</button>
+      <button class="filter-btn" onclick="filterReviews('recent')">Récent d'abord</button>
+      <button class="filter-btn" onclick="filterReviews('helpful')">Plus utiles</button>
+    </div>
+
+    <!-- LISTE DES AVIS -->
+    <section class="module-card">
+      <h2>Avis des clients</h2>
+      <p id="reviewsStatus" class="status">Chargement des avis...</p>
+      <div id="reviewsList" class="reviews-list"></div>
+    </section>
+
+  </main>
+
+  <script>
+    const starPicker = document.getElementById("starPicker");
+    const selectedRatingInput = document.getElementById("selectedRating");
+    let selectedRating = 0;
+
+    // Star picker
+    starPicker.querySelectorAll(".star").forEach(star => {
+      star.addEventListener("click", () => {
+        selectedRating = parseInt(star.dataset.value);
+        selectedRatingInput.value = selectedRating;
+        starPicker.querySelectorAll(".star").forEach((s, idx) => {
+          s.classList.toggle("selected", idx < selectedRating);
+        });
+      });
+      star.addEventListener("mouseover", () => {
+        starPicker.querySelectorAll(".star").forEach((s, idx) => {
+          s.style.opacity = idx < parseInt(star.dataset.value) ? "1" : "0.3";
+        });
+      });
+    });
+    starPicker.addEventListener("mouseleave", () => {
+      starPicker.querySelectorAll(".star").forEach((s, idx) => {
+        s.style.opacity = idx < selectedRating ? "1" : "0.3";
+      });
+    });
+
+    // Mock reviews
+    const mockReviews = [
+      {
+        id: 1,
+        reviewer: "Mohammed",
+        email: "mo@email.com",
+        rating: 5,
+        date: "2026-03-28",
+        text: "Excellent service! Très professionnel et rapide. Je recommande vivement!",
+        helpful: 12
+      },
+      {
+        id: 2,
+        reviewer: "Amira",
+        email: "amira@email.com",
+        rating: 5,
+        date: "2026-03-25",
+        text: "Vraiment satisfaite du travail. Qualité au-dessus de mes attentes.",
+        helpful: 8
+      },
+      {
+        id: 3,
+        reviewer: "Karim",
+        email: "karim@email.com",
+        rating: 4,
+        date: "2026-03-20",
+        text: "Bon travail, un peu long mais le résultat est là. Merci!",
+        helpful: 5
+      }
+    ];
+
+    function getStarDisplay(rating) {
+      return "★".repeat(rating) + "☆".repeat(5-rating);
+    }
+
+    async function loadReviews() {
+      const reviewsList = document.getElementById("reviewsList");
+      try {
+        const response = await fetch("/sarbi_rohek/api/reviews");
+        if (!response.ok) {
+          document.getElementById("reviewsStatus").textContent = "❌ Erreur lors du chargement des avis";
+          return;
+        }
+
+        const reviews = await response.json();
+        reviewsList.innerHTML = "";
+
+        if (!reviews || reviews.length === 0) {
+          document.getElementById("reviewsStatus").textContent = "📋 Aucun avis pour le moment. Soyez le premier à en publier!";
+          return;
+        }
+
+        document.getElementById("reviewsStatus").textContent = "";
+        reviews.forEach(review => {
+          const reviewDate = review.createdAt ? new Date(review.createdAt).toLocaleDateString('fr-FR') : 'N/A';
+          const rating = review.rating || review.rvenueating || 5;
+          const authorName = review.clientName || review.author || review.email?.split('@')[0] || 'Anonyme';
+          
+          const card = document.createElement("div");
+          card.className = "review-card";
+          card.innerHTML = `
+            <div class="review-header">
+              <div class="reviewer-info">
+                <div class="reviewer-avatar">${authorName.charAt(0).toUpperCase()}</div>
+                <div class="reviewer-details">
+                  <div class="reviewer-name">${authorName}</div>
+                  <div class="review-date">${reviewDate}</div>
+                </div>
+              </div>
+              <div class="review-rating">${getStarDisplay(rating)}</div>
+            </div>
+            <div class="review-text">${review.comment || review.text || review.commentText || 'Pas de commentaire'}</div>
+            <div class="review-footer">
+              <button class="helpful-btn" onclick="markHelpful(${review.id || 0})">👍 Utile</button>
+              <button class="helpful-btn" onclick="reportReview(${review.id || 0})">🚩 Signaler</button>
+            </div>
+          `;
+          reviewsList.appendChild(card);
+        });
+      } catch (error) {
+        console.error("Erreur lors du chargement des avis", error);
+        document.getElementById("reviewsStatus").textContent = "❌ Erreur lors du chargement des avis";
+      }
+    }
+
+    function filterReviews(filter) {
+      // Mettre à jour visuellement
+      document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
+      event.target.classList.add("active");
+      // Logique de filtrage à implémenter
+    }
+
+    function markHelpful(reviewId) {
+      alert(`Avis #${reviewId} marqué comme utile!`);
+    }
+
+    function reportReview(reviewId) {
+      if (confirm("Signaler cet avis comme inapproprié ?")) {
+        alert("Avis signalé. Merci pour votre aide.");
+      }
+    }
+
+    document.getElementById("reviewForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const status = document.getElementById("reviewFormStatus");
+      if (selectedRating === 0) {
+        status.className = "module-status is-error";
+        status.textContent = "Veuillez noter le prestataire";
+        return;
+      }
+      status.className = "module-status is-success";
+      status.textContent = "✅ Votre avis a été publié!";
+      setTimeout(() => {
+        document.getElementById("reviewForm").reset();
+        selectedRating = 0;
+        starPicker.querySelectorAll(".star").forEach(s => s.classList.remove("selected"));
+      }, 1500);
+    });
+
+    loadReviews();
+  </script>
+</body>
+</html>

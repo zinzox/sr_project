@@ -22,11 +22,12 @@ public class AdminAccountsServlet extends HttpServlet {
 
     ProviderRepository repository = ProviderRepository.getInstance();
     List<ProviderRepository.Account> accounts = repository.listAllAccounts();
+    List<ProviderRepository.ClientProviderLinkRecord> links = repository.listClientProviderLinks();
 
     response.setStatus(HttpServletResponse.SC_OK);
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
-    response.getWriter().write(accountsToJson(accounts));
+    response.getWriter().write(buildAdminPayload(accounts, links));
   }
 
   @Override
@@ -86,6 +87,37 @@ public class AdminAccountsServlet extends HttpServlet {
 
     sb.append("]");
     return sb.toString();
+  }
+
+  private String linksToJson(List<ProviderRepository.ClientProviderLinkRecord> links) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("[");
+
+    for (int i = 0; i < links.size(); i++) {
+      ProviderRepository.ClientProviderLinkRecord link = links.get(i);
+      if (i > 0) {
+        sb.append(",");
+      }
+
+      sb.append("{")
+          .append("\"clientEmail\":\"").append(escape(link.clientEmail)).append("\",")
+          .append("\"providerEmail\":\"").append(escape(link.providerEmail)).append("\",")
+          .append("\"relationType\":\"").append(escape(link.relationType)).append("\",")
+          .append("\"createdAt\":\"").append(escape(link.createdAt)).append("\"")
+          .append("}");
+    }
+
+    sb.append("]");
+    return sb.toString();
+  }
+
+  private String buildAdminPayload(
+      List<ProviderRepository.Account> accounts,
+      List<ProviderRepository.ClientProviderLinkRecord> links) {
+    return "{" +
+        "\"accounts\":" + accountsToJson(accounts) + "," +
+        "\"links\":" + linksToJson(links) +
+        "}";
   }
 
   private void writeJsonError(HttpServletResponse response, int status, String message) throws IOException {

@@ -4,7 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin - Gestion Comptes</title>
-  <link rel="stylesheet" href="admin.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css?v=20260327-1" />
 </head>
 <body>
   <main class="admin-page">
@@ -62,8 +65,106 @@
         <tbody id="accountsBody"></tbody>
       </table>
     </section>
+
+    <section class="admin-table-wrap">
+      <h2 class="admin-subtitle">Menaces detectees par IA</h2>
+      <div class="moderation-kpis">
+        <article class="kpi-card">
+          <p>Alertes ouvertes</p>
+          <strong id="kpiOpenAlerts">0</strong>
+        </article>
+        <article class="kpi-card">
+          <p>Alertes HIGH aujourd'hui</p>
+          <strong id="kpiHighToday">0</strong>
+        </article>
+        <article class="kpi-card">
+          <p>Temp ban actifs</p>
+          <strong id="kpiTempBans">0</strong>
+        </article>
+      </div>
+
+      <div class="moderation-filters">
+        <label>
+          Statut
+          <select id="filterAlertStatus">
+            <option value="OPEN">Ouvertes</option>
+            <option value="ALL">Toutes</option>
+            <option value="ACTIONED">Actionnees</option>
+            <option value="RESOLVED">Resolues</option>
+          </select>
+        </label>
+
+        <label>
+          Severite
+          <select id="filterAlertSeverity">
+            <option value="ALL">Toutes</option>
+            <option value="HIGH">HIGH</option>
+            <option value="MEDIUM">MEDIUM</option>
+            <option value="LOW">LOW</option>
+          </select>
+        </label>
+
+        <label>
+          Expediteur
+          <input id="filterAlertSender" type="text" placeholder="email expediteur" />
+        </label>
+
+        <button id="applyModerationFilters" type="button">Filtrer</button>
+      </div>
+
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Expediteur</th>
+            <th>Destinataire</th>
+            <th>Severite</th>
+            <th>Risk</th>
+            <th>Categories</th>
+            <th>Message</th>
+            <th>Raison IA</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="alertsBody"></tbody>
+      </table>
+    </section>
+
+    <section class="admin-table-wrap">
+      <h2 class="admin-subtitle">Blacklist active</h2>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Telephone</th>
+            <th>Raison</th>
+            <th>Debut</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="blacklistBody"></tbody>
+      </table>
+    </section>
+
+    <section class="admin-table-wrap">
+      <h2 class="admin-subtitle">Journal moderation</h2>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Action</th>
+            <th>Email cible</th>
+            <th>Telephone</th>
+            <th>Raison</th>
+            <th>Admin</th>
+          </tr>
+        </thead>
+        <tbody id="auditBody"></tbody>
+      </table>
+    </section>
   </main>
 
   <script src="admin.js"></script>
+  <script src="chatbot-widget.js"></script>
 </body>
 </html>

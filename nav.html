@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Navigation Sarbi Rohek</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .nav-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    .nav-header {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .nav-header h1 {
+      color: #667eea;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+    
+    .nav-header p {
+      color: #666;
+      font-size: 1.1em;
+    }
+    
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    
+    .nav-card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    
+    .nav-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    }
+    
+    .nav-card .icon {
+      font-size: 2.5em;
+      margin-bottom: 15px;
+    }
+    
+    .nav-card h2 {
+      color: #667eea;
+      margin-bottom: 10px;
+      font-size: 1.3em;
+    }
+    
+    .nav-card p {
+      color: #666;
+      font-size: 0.95em;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+    
+    .nav-card .status {
+      font-size: 0.85em;
+      padding: 5px 10px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+    
+    .status.active { background: #e8f5e9; color: #2e7d32; }
+    .status.inactive { background: #ffebee; color: #c62828; }
+    
+    .nav-card a {
+      display: inline-block;
+      background: #667eea;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s;
+      width: 100%;
+      text-align: center;
+    }
+    
+    .nav-card a:hover {
+      background: #764ba2;
+    }
+    
+    .section-title {
+      color: white;
+      font-size: 1.5em;
+      font-weight: 600;
+      margin: 40px 0 20px 0;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .info-box {
+      background: rgba(255,255,255,0.1);
+      border-left: 4px solid white;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 30px 0;
+      backdrop-filter: blur(10px);
+    }
+    
+    .info-box strong { color: #fff; }
+    .info-box p { line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <div class="nav-container">
+    
+    <!-- HEADER -->
+    <div class="nav-header">
+      <h1>🗺️ Navigation Sarbi Rohek</h1>
+      <p>Accédez rapidement à toutes les pages et fonctionnalités</p>
+    </div>
+
+    <!-- INFO BOX -->
+    <div class="info-box">
+      <strong>⚡ Important :</strong> 
+      <p>Les pages <strong>client-space.html</strong> et <strong>provider-space.html</strong> 
+      nécessitent une connexion. Connectez-vous d'abord, puis utilisez les onglets pour accéder aux fonctionnalités.</p>
+    </div>
+
+    <!-- PAGES PRINCIPALES -->
+    <h2 class="section-title">📍 Pages Principales</h2>
+    <div class="nav-grid">
+      
+      <div class="nav-card">
+        <div class="icon">🏠</div>
+        <h2>Accueil</h2>
+        <p>Page d'accueil avec présentation de l'application et derniers prestataires vedettes.</p>
+        <span class="status active">Accessible</span>
+        <a href="index.html">Ouvrir →</a>
+      </div>
+      
+      <div class="nav-card">
+        <div class="icon">📝</div>
+        <h2>Inscription</h2>
+        <p>Créer un nouveau compte client ou prestataire.</p>
+        <span class="status active">Accessible</span>
+        <a href="register.html">Ouvrir →</a>
+      </div>
+      
+      <div class="nav-card">
+        <div class="icon">🔐</div>
+        <h2>Connexion</h2>
+        <p>Se connecter avec vos identifiants pour accéder à toutes les fonctionnalités.</p>
+        <span class="status active">Accessible</span>
+        <a href="login.html">Ouvrir →</a>
+      </div>
+
+    </div>
+
+    <!-- APRÈS CONNEXION - CLIENTS -->
+    <h2 class="section-title">👤 Espace Client (Après Connexion)</h2>
+    <div class="nav-grid">
+      
+      <div class="nav-card">
+        <div class="icon">🎯</div>
+        <h2>Espace Client</h2>
+        <p>Accédez à tous les prestataires, gérez vos devis, commandes et messages.</p>
+        <span class="status active">✅ Connectez-vous d'abord</span>
+        <a href="client-space.html">Ouvrir →</a>
+      </div>
+
+      <div class="nav-card">
+        <div class="icon">ℹ️</div>
+        <h2>Comment Utiliser ?</h2>
+        <p>Guide complet pour naviguer dans l'espace client et accéder à toutes les fonctionnalités.</p>
+        <span class="status active">Accessible</span>
+        <a href="access.html">Guide →</a>
+      </div>
+
+    </div>
+
+    <!-- APRÈS CONNEXION - PRESTATAIRES -->
+    <h2 class="section-title">🏪 Espace Prestataire (Après Connexion)</h2>
+    <div class="nav-grid">
+      
+      <div class="nav-card">
+        <div class="icon">🎯</div>
+        <h2>Espace Prestataire</h2>
+        <p>Gérez votre profil, portfolio, créneaux et messages des clients.</p>
+        <span class="status active">✅ Connectez-vous d'abord</span>
+        <a href="provider-space.html">Ouvrir →</a>
+      </div>
+
+    </div>
+
+    <!-- GUIDES ET DOCUMENTATION -->
+    <h2 class="section-title">📚 Guides et Documentation</h2>
+    <div class="nav-grid">
+      
+      <div class="nav-card">
+        <div class="icon">📖</div>
+        <h2>Guide Complet</h2>
+        <p>Documentation détaillée avec explications sur comment utiliser chaque fonctionnalité.</p>
+        <span class="status active">Accessible</span>
+        <a href="guide.html">Lire →</a>
+      </div>
+
+      <div class="nav-card">
+        <div class="icon">💡</div>
+        <h2>Solution Problème</h2>
+        <p>Explications sur pourquoi l'application semblait vide et comment accéder aux données.</p>
+        <span class="status active">Accessible</span>
+        <a href="SOLUTION_EXPLANATION.md">Lire →</a>
+      </div>
+
+      <div class="nav-card">
+        <div class="icon">✅</div>
+        <h2>Résumé Implémentation</h2>
+        <p>Détails techniques sur toutes les fonctionnalités intégrées et les APIs utilisées.</p>
+        <span class="status active">Accessible</span>
+        <a href="IMPLEMENTATION_SUMMARY.md">Lire →</a>
+      </div>
+
+    </div>
+
+    <!-- PAGES AUTONOMES (NON RECOMMANDÉES) -->
+    <h2 class="section-title">⚠️ Pages Autonomes (Inaccessibles directement)</h2>
+    <div class="info-box">
+      <strong>⚠️ Attention :</strong>
+      <p>Ces pages existent mais <strong>ne sont pas accessibles directement</strong> car elles nécessitent une authentification. 
+      Les fonctionnalités sont intégrées comme des onglets dans <strong>client-space.html</strong>.</p>
+    </div>
+    
+    <div class="nav-grid">
+      
+      <div class="nav-card">
+        <div class="icon">📋</div>
+        <h2>Devis</h2>
+        <p>Gestion des demandes de devis (intégré dans client-space.html).</p>
+        <span class="status inactive">❌ Inaccessible directement</span>
+        <a href="quotes.html" style="opacity: 0.5; cursor: not-allowed;">Inaccessible</a>
+      </div>
+
+      <div class="nav-card">
+        <div class="icon">📦</div>
+        <h2>Commandes</h2>
+        <p>Historique des commandes et paiements (intégré dans client-space.html).</p>
+        <span class="status inactive">❌ Inaccessible directement</span>
+        <a href="orders.html" style="opacity: 0.5; cursor: not-allowed;">Inaccessible</a>
+      </div>
+
+      <div class="nav-card">
+        <div class="icon">⭐</div>
+        <h2>Avis</h2>
+        <p>Publication et consultation des avis (intégré dans client-space.html).</p>
+        <span class="status inactive">❌ Inaccessible directement</span>
+        <a href="reviews.html" style="opacity: 0.5; cursor: not-allowed;">Inaccessible</a>
+      </div>
+
+      <div class="nav-card">
+        <div class="icon">🎨</div>
+        <h2>Portfolio</h2>
+        <p>Portfolio et certifications (intégré dans provider-space.html).</p>
+        <span class="status inactive">❌ Inaccessible directement</span>
+        <a href="portfolio.html" style="opacity: 0.5; cursor: not-allowed;">Inaccessible</a>
+      </div>
+
+      <div class="nav-card">
+        <div class="icon">📅</div>
+        <h2>Créneaux</h2>
+        <p>Calendrier et availability management (intégré dans provider-space.html).</p>
+        <span class="status inactive">❌ Inaccessible directement</span>
+        <a href="slots.html" style="opacity: 0.5; cursor: not-allowed;">Inaccessible</a>
+      </div>
+
+      <div class="nav-card">
+        <div class="icon">📊</div>
+        <h2>Dashboard</h2>
+        <p>Analytics et statistiques (intégré dans client-space.html).</p>
+        <span class="status inactive">❌ Inaccessible directement</span>
+        <a href="dashboard.html" style="opacity: 0.5; cursor: not-allowed;">Inaccessible</a>
+      </div>
+
+      <div class="nav-card">
+        <div class="icon">💬</div>
+        <h2>Messagerie</h2>
+        <p>Chat en temps réel (intégré dans client-space.html).</p>
+        <span class="status inactive">❌ Inaccessible directement</span>
+        <a href="messaging.html" style="opacity: 0.5; cursor: not-allowed;">Inaccessible</a>
+      </div>
+
+      <div class="nav-card">
+        <div class="icon">📖</div>
+        <h2>Annuaire</h2>
+        <p>Répertoire des prestataires (intégré dans client-space.html).</p>
+        <span class="status inactive">❌ Inaccessible directement</span>
+        <a href="directory.html" style="opacity: 0.5; cursor: not-allowed;">Inaccessible</a>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="info-box" style="margin-top: 50px; text-align: center;">
+      <strong>🎯 Prêt à Commencer ?</strong>
+      <p style="margin-top: 10px;">
+        <a href="login.html" style="color: #ffd54f; font-weight: 600; text-decoration: underline;">
+          → Se connecter maintenant
+        </a>
+      </p>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -13,6 +13,8 @@ import jakarta.servlet.http.HttpSession;
 @WebServlet("/api/login")
 public class LoginVerificationServlet extends HttpServlet {
 
+  private static final String ADMIN_CONTACT_EMAIL = "roheksarbi@gmail.com";
+
   private static final Pattern EMAIL_PATTERN =
       Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
 
@@ -43,6 +45,18 @@ public class LoginVerificationServlet extends HttpServlet {
     if (account == null) {
       response.sendRedirect(request.getContextPath() + "/register.html?error="
           + encode("Compte introuvable. Inscris-toi d'abord."));
+      return;
+    }
+
+    ModerationRepository moderationRepository = ModerationRepository.getInstance();
+    if (moderationRepository.isBlacklisted(account.email, account.phone)) {
+      redirectLoginError(request, response,
+          "Compte blacklisté. Contactez l'administrateur: " + ADMIN_CONTACT_EMAIL);
+      return;
+    }
+
+    if (moderationRepository.isTemporarilyBanned(account.email)) {
+      redirectLoginError(request, response, "Compte temporairement suspendu (5 minutes).");
       return;
     }
 

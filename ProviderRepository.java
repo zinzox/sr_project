@@ -35,12 +35,21 @@ public class ProviderRepository {
   }
 
   public synchronized boolean emailExists(String email) throws IOException {
-    String sql = "SELECT 1 FROM providers WHERE LOWER(email) = LOWER(?) LIMIT 1";
+    String providerSql = "SELECT 1 FROM providers WHERE LOWER(email) = LOWER(?) LIMIT 1";
+    String clientSql = "SELECT 1 FROM clients WHERE LOWER(email) = LOWER(?) LIMIT 1";
     try (Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql)) {
-      statement.setString(1, normalizeEmail(email));
-      try (ResultSet resultSet = statement.executeQuery()) {
-        return resultSet.next();
+        PreparedStatement providerStatement = connection.prepareStatement(providerSql);
+        PreparedStatement clientStatement = connection.prepareStatement(clientSql)) {
+      providerStatement.setString(1, normalizeEmail(email));
+      try (ResultSet providerRs = providerStatement.executeQuery()) {
+        if (providerRs.next()) {
+          return true;
+        }
+      }
+
+      clientStatement.setString(1, normalizeEmail(email));
+      try (ResultSet clientRs = clientStatement.executeQuery()) {
+        return clientRs.next();
       }
     } catch (SQLException ex) {
       throw new IOException("Erreur SQL pendant la verification d'email.", ex);
@@ -48,38 +57,68 @@ public class ProviderRepository {
   }
 
   public synchronized Account findByEmail(String email) throws IOException {
-    String sql = """
-     SELECT role, first_name, last_name, age, cin, service_type,
-       main_activity, work_title, work_description, phone, email, password_hash, created_at, photo_url
-        FROM providers
-        WHERE LOWER(email) = LOWER(?)
-        LIMIT 1
-        """;
+    String providerSql = """
+      SELECT first_name, last_name, age, cin, service_type,
+             main_activity, work_title, work_description, phone, email, password_hash, created_at, photo_url
+      FROM providers
+      WHERE LOWER(email) = LOWER(?)
+      LIMIT 1
+      """;
+
+    String clientSql = """
+      SELECT first_name, last_name, age, phone, email, password_hash, created_at
+      FROM clients
+      WHERE LOWER(email) = LOWER(?)
+      LIMIT 1
+      """;
 
     try (Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql)) {
-      statement.setString(1, normalizeEmail(email));
+        PreparedStatement providerStatement = connection.prepareStatement(providerSql);
+        PreparedStatement clientStatement = connection.prepareStatement(clientSql)) {
+      String normalizedEmail = normalizeEmail(email);
 
-      try (ResultSet rs = statement.executeQuery()) {
+      providerStatement.setString(1, normalizedEmail);
+      try (ResultSet rs = providerStatement.executeQuery()) {
+        if (rs.next()) {
+          return new Account(
+              "PROVIDER",
+              rs.getString("first_name"),
+              rs.getString("last_name"),
+              String.valueOf(rs.getInt("age")),
+              rs.getString("cin"),
+              rs.getString("service_type"),
+              rs.getString("main_activity"),
+              rs.getString("work_title"),
+              rs.getString("work_description"),
+              rs.getString("phone"),
+              rs.getString("email"),
+              rs.getString("password_hash"),
+              rs.getString("created_at"),
+              rs.getString("photo_url"));
+        }
+      }
+
+      clientStatement.setString(1, normalizedEmail);
+      try (ResultSet rs = clientStatement.executeQuery()) {
         if (!rs.next()) {
           return null;
         }
 
         return new Account(
-            rs.getString("role"),
+            "CLIENT",
             rs.getString("first_name"),
             rs.getString("last_name"),
             String.valueOf(rs.getInt("age")),
-            rs.getString("cin"),
-            rs.getString("service_type"),
-            rs.getString("main_activity"),
-            rs.getString("work_title"),
-            rs.getString("work_description"),
+            "",
+            "",
+            "",
+            "",
+            "",
             rs.getString("phone"),
             rs.getString("email"),
             rs.getString("password_hash"),
             rs.getString("created_at"),
-            rs.getString("photo_url"));
+            "");
       }
     } catch (SQLException ex) {
       throw new IOException("Erreur SQL pendant la lecture du compte.", ex);
@@ -89,9 +128,27 @@ public class ProviderRepository {
   public synchronized List<Account> listAllAccounts() throws IOException {
     String sql = """
         SELECT role, first_name, last_name, age, cin, service_type,
-           main_activity, work_title, work_description, phone, email, password_hash, created_at, photo_url
-        FROM providers
-     ORDER BY created_at DESC
+               main_activity, work_title, work_description, phone, email, password_hash, created_at, photo_url
+        FROM (
+          SELECT 'PROVIDER' AS role,
+                 first_name, last_name, age, cin, service_type,
+                 main_activity, work_title, work_description, phone, email, password_hash, created_at, photo_url
+          FROM providers
+
+          UNION ALL
+
+          SELECT 'CLIENT' AS role,
+                 first_name, last_name, age,
+                 '' AS cin,
+                 '' AS service_type,
+                 '' AS main_activity,
+                 '' AS work_title,
+                 '' AS work_description,
+                 phone, email, password_hash, created_at,
+                 '' AS photo_url
+          FROM clients
+        ) all_accounts
+        ORDER BY created_at DESC
         """;
 
     List<Account> accounts = new ArrayList<>();
@@ -124,12 +181,19 @@ public class ProviderRepository {
   }
 
   public synchronized boolean deleteByEmail(String email) throws IOException {
-    String sql = "DELETE FROM providers WHERE LOWER(email) = LOWER(?)";
+    String providerSql = "DELETE FROM providers WHERE LOWER(email) = LOWER(?)";
+    String clientSql = "DELETE FROM clients WHERE LOWER(email) = LOWER(?)";
 
     try (Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql)) {
-      statement.setString(1, normalizeEmail(email));
-      return statement.executeUpdate() > 0;
+        PreparedStatement providerStatement = connection.prepareStatement(providerSql);
+        PreparedStatement clientStatement = connection.prepareStatement(clientSql)) {
+      String normalizedEmail = normalizeEmail(email);
+      providerStatement.setString(1, normalizedEmail);
+      clientStatement.setString(1, normalizedEmail);
+
+      int deletedProviders = providerStatement.executeUpdate();
+      int deletedClients = clientStatement.executeUpdate();
+      return deletedProviders > 0 || deletedClients > 0;
     } catch (SQLException ex) {
       throw new IOException("Erreur SQL pendant la suppression du compte.", ex);
     }
@@ -137,10 +201,9 @@ public class ProviderRepository {
 
   public synchronized List<Account> listFirstProviders(int limit) throws IOException {
     String sql = """
-        SELECT role, first_name, last_name, age, cin, service_type,
+     SELECT first_name, last_name, age, cin, service_type,
                main_activity, work_title, work_description, phone, email, password_hash, created_at, photo_url
         FROM providers
-        WHERE role = 'PROVIDER'
         ORDER BY created_at ASC
         LIMIT ?
         """;
@@ -154,7 +217,7 @@ public class ProviderRepository {
       try (ResultSet rs = statement.executeQuery()) {
         while (rs.next()) {
           accounts.add(new Account(
-              rs.getString("role"),
+              "PROVIDER",
               rs.getString("first_name"),
               rs.getString("last_name"),
               String.valueOf(rs.getInt("age")),
@@ -179,10 +242,9 @@ public class ProviderRepository {
 
   public synchronized List<Account> listAllProviders() throws IOException {
     String sql = """
-        SELECT role, first_name, last_name, age, cin, service_type,
+     SELECT first_name, last_name, age, cin, service_type,
                main_activity, work_title, work_description, phone, email, password_hash, created_at, photo_url
         FROM providers
-        WHERE role = 'PROVIDER'
         ORDER BY created_at DESC
         """;
 
@@ -193,7 +255,7 @@ public class ProviderRepository {
         ResultSet rs = statement.executeQuery()) {
       while (rs.next()) {
         accounts.add(new Account(
-            rs.getString("role"),
+            "PROVIDER",
             rs.getString("first_name"),
             rs.getString("last_name"),
             String.valueOf(rs.getInt("age")),
@@ -216,7 +278,7 @@ public class ProviderRepository {
   }
 
   public synchronized boolean updateProviderPhoto(String email, String photoUrl) throws IOException {
-    String sql = "UPDATE providers SET photo_url = ? WHERE LOWER(email) = LOWER(?) AND role = 'PROVIDER'";
+    String sql = "UPDATE providers SET photo_url = ? WHERE LOWER(email) = LOWER(?)";
     try (Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
       statement.setString(1, sanitize(photoUrl));
@@ -242,7 +304,6 @@ public class ProviderRepository {
             work_description = ?,
             phone = ?
         WHERE LOWER(email) = LOWER(?)
-          AND role = 'PROVIDER'
         """;
 
     try (Connection connection = getConnection();
@@ -260,29 +321,47 @@ public class ProviderRepository {
   }
 
   public synchronized void save(Account account) throws IOException {
-    String sql = """
+    String providerSql = """
         INSERT INTO providers (
-          role, first_name, last_name, age, cin, service_type,
+          first_name, last_name, age, cin, service_type,
           main_activity, work_title, work_description, phone, email, password_hash, photo_url
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """;
 
-    try (Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql)) {
-      statement.setString(1, sanitize(account.role));
-      statement.setString(2, sanitize(account.firstName));
-      statement.setString(3, sanitize(account.lastName));
-      statement.setInt(4, parseAge(account.age));
-      statement.setString(5, sanitize(account.cin));
-      statement.setString(6, sanitize(account.serviceType));
-      statement.setString(7, sanitize(account.mainActivity));
-      statement.setString(8, sanitize(account.workTitle));
-      statement.setString(9, sanitize(account.workDescription));
-      statement.setString(10, sanitize(account.phone));
-      statement.setString(11, normalizeEmail(account.email));
-      statement.setString(12, sanitize(account.passwordHash));
-      statement.setString(13, sanitize(account.photoUrl));
-      statement.executeUpdate();
+    String clientSql = """
+        INSERT INTO clients (
+          first_name, last_name, age, phone, email, password_hash
+        ) VALUES (?, ?, ?, ?, ?, ?)
+        """;
+
+    try (Connection connection = getConnection()) {
+      if ("PROVIDER".equalsIgnoreCase(sanitize(account.role))) {
+        try (PreparedStatement statement = connection.prepareStatement(providerSql)) {
+          statement.setString(1, sanitize(account.firstName));
+          statement.setString(2, sanitize(account.lastName));
+          statement.setInt(3, parseAge(account.age));
+          statement.setString(4, sanitize(account.cin));
+          statement.setString(5, sanitize(account.serviceType));
+          statement.setString(6, sanitize(account.mainActivity));
+          statement.setString(7, sanitize(account.workTitle));
+          statement.setString(8, sanitize(account.workDescription));
+          statement.setString(9, sanitize(account.phone));
+          statement.setString(10, normalizeEmail(account.email));
+          statement.setString(11, sanitize(account.passwordHash));
+          statement.setString(12, sanitize(account.photoUrl));
+          statement.executeUpdate();
+        }
+      } else {
+        try (PreparedStatement statement = connection.prepareStatement(clientSql)) {
+          statement.setString(1, sanitize(account.firstName));
+          statement.setString(2, sanitize(account.lastName));
+          statement.setInt(3, parseAge(account.age));
+          statement.setString(4, sanitize(account.phone));
+          statement.setString(5, normalizeEmail(account.email));
+          statement.setString(6, sanitize(account.passwordHash));
+          statement.executeUpdate();
+        }
+      }
     } catch (SQLIntegrityConstraintViolationException ex) {
       throw new IllegalStateException("Email deja utilise.", ex);
     } catch (SQLException ex) {
@@ -312,7 +391,6 @@ public class ProviderRepository {
     String sql = """
         CREATE TABLE IF NOT EXISTS providers (
           id BIGINT AUTO_INCREMENT UNIQUE,
-          role VARCHAR(20) NOT NULL,
           first_name VARCHAR(120) NOT NULL,
           last_name VARCHAR(120) NOT NULL,
           age INT NOT NULL,
@@ -335,6 +413,11 @@ public class ProviderRepository {
       statement.execute();
       ensureEmailPrimaryKey(connection);
       ensurePhotoColumn(connection);
+      ensureClientsTable(connection);
+      ensureClientsSchemaCompatibility(connection);
+      ensureLegacyProviderRoleCompatibility(connection);
+      migrateLegacyClientsFromProviders(connection);
+      ensureClientProviderLinksTable(connection);
       ensureMessagesTable(connection);
     }
   }
@@ -361,6 +444,104 @@ public class ProviderRepository {
       statement.execute();
     } catch (SQLException ignored) {
       // Column may already exist.
+    }
+  }
+
+  private void ensureClientsTable(Connection connection) {
+    String sql = """
+        CREATE TABLE IF NOT EXISTS clients (
+          email VARCHAR(190) NOT NULL,
+          first_name VARCHAR(120) NOT NULL,
+          last_name VARCHAR(120) NOT NULL,
+          age INT NOT NULL DEFAULT 0,
+          phone VARCHAR(40) NULL,
+          password_hash VARCHAR(128) NOT NULL DEFAULT '',
+          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          PRIMARY KEY (email)
+        )
+        """;
+
+    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+      statement.execute();
+    } catch (SQLException ignored) {
+      // Table may already exist or be partially compatible.
+    }
+  }
+
+  private void ensureClientsSchemaCompatibility(Connection connection) {
+    String addAgeSql = "ALTER TABLE clients ADD COLUMN age INT NOT NULL DEFAULT 0";
+    String addPasswordSql = "ALTER TABLE clients ADD COLUMN password_hash VARCHAR(128) NOT NULL DEFAULT ''";
+
+    try (PreparedStatement statement = connection.prepareStatement(addAgeSql)) {
+      statement.execute();
+    } catch (SQLException ignored) {
+      // Column may already exist.
+    }
+
+    try (PreparedStatement statement = connection.prepareStatement(addPasswordSql)) {
+      statement.execute();
+    } catch (SQLException ignored) {
+      // Column may already exist.
+    }
+  }
+
+  private void ensureLegacyProviderRoleCompatibility(Connection connection) {
+    String alterRoleSql = "ALTER TABLE providers MODIFY COLUMN role VARCHAR(20) NOT NULL DEFAULT 'PROVIDER'";
+    try (PreparedStatement statement = connection.prepareStatement(alterRoleSql)) {
+      statement.execute();
+    } catch (SQLException ignored) {
+      // The role column may not exist anymore, which is fine.
+    }
+  }
+
+  private void migrateLegacyClientsFromProviders(Connection connection) {
+    String copyLegacyClientsSql = """
+        INSERT INTO clients (email, first_name, last_name, age, phone, password_hash, created_at)
+        SELECT p.email, p.first_name, p.last_name, p.age, p.phone, p.password_hash, p.created_at
+        FROM providers p
+        WHERE p.role = 'CLIENT'
+          AND NOT EXISTS (
+            SELECT 1 FROM clients c WHERE LOWER(c.email) = LOWER(p.email)
+          )
+        """;
+
+    String deleteLegacyClientsSql = "DELETE FROM providers WHERE role = 'CLIENT'";
+
+    try (PreparedStatement copyStatement = connection.prepareStatement(copyLegacyClientsSql);
+        PreparedStatement deleteStatement = connection.prepareStatement(deleteLegacyClientsSql)) {
+      copyStatement.executeUpdate();
+      deleteStatement.executeUpdate();
+    } catch (SQLException ignored) {
+      // If providers has no legacy role column/data, ignore.
+    }
+  }
+
+  private void ensureClientProviderLinksTable(Connection connection) {
+    String sql = """
+        CREATE TABLE IF NOT EXISTS client_provider_links (
+          id BIGINT AUTO_INCREMENT PRIMARY KEY,
+          client_email VARCHAR(190) NOT NULL,
+          provider_email VARCHAR(190) NOT NULL,
+          relation_type VARCHAR(40) NOT NULL DEFAULT 'REQUEST',
+          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          UNIQUE KEY uk_client_provider_relation (client_email, provider_email, relation_type),
+          INDEX idx_cpl_client (client_email),
+          INDEX idx_cpl_provider (provider_email),
+          CONSTRAINT fk_cpl_client_email
+            FOREIGN KEY (client_email) REFERENCES clients(email)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE,
+          CONSTRAINT fk_cpl_provider_email
+            FOREIGN KEY (provider_email) REFERENCES providers(email)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
+        )
+        """;
+
+    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+      statement.execute();
+    } catch (SQLException ignored) {
+      // Table may already exist or be partially compatible.
     }
   }
 
@@ -475,6 +656,32 @@ public class ProviderRepository {
     }
 
     return messages;
+  }
+
+  public synchronized List<ClientProviderLinkRecord> listClientProviderLinks() throws IOException {
+    String sql = """
+        SELECT client_email, provider_email, relation_type, created_at
+        FROM client_provider_links
+        ORDER BY created_at DESC
+        """;
+
+    List<ClientProviderLinkRecord> links = new ArrayList<>();
+
+    try (Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+        ResultSet rs = statement.executeQuery()) {
+      while (rs.next()) {
+        links.add(new ClientProviderLinkRecord(
+            rs.getString("client_email"),
+            rs.getString("provider_email"),
+            rs.getString("relation_type"),
+            rs.getString("created_at")));
+      }
+    } catch (SQLException ex) {
+      throw new IOException("Erreur SQL pendant la lecture des liaisons client-prestataire.", ex);
+    }
+
+    return links;
   }
 
   private String sanitizeMessage(String value) {
@@ -629,6 +836,20 @@ public class ProviderRepository {
       this.senderEmail = senderEmail;
       this.recipientEmail = recipientEmail;
       this.messageText = messageText;
+      this.createdAt = createdAt;
+    }
+  }
+
+  public static class ClientProviderLinkRecord {
+    public final String clientEmail;
+    public final String providerEmail;
+    public final String relationType;
+    public final String createdAt;
+
+    public ClientProviderLinkRecord(String clientEmail, String providerEmail, String relationType, String createdAt) {
+      this.clientEmail = clientEmail;
+      this.providerEmail = providerEmail;
+      this.relationType = relationType;
       this.createdAt = createdAt;
     }
   }

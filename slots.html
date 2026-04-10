@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mes Créneaux — Sarbi Rohek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="provider-space.css" />
+  <style>
+    .slots-container { padding: 20px; }
+    .calendar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin: 20px 0; }
+    .calendar-card { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 15px; }
+    .calendar-header { font-weight: 600; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+    .calendar-body { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+    .day-header { text-align: center; font-weight: 600; font-size: 0.8em; color: #999; padding: 5px; }
+    .day { text-align: center; padding: 8px; border: 1px solid #f0f0f0; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
+    .day:hover { background: #f0f0f0; }
+    .day.today { background: #667eea; color: white; font-weight: 600; }
+    .day.booked { background: #f5576c; color: white; }
+    .day.selected { background: #4caf50; color: white; }
+    
+    .form-section { background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+    .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: Poppins, sans-serif; }
+    
+    .slots-list { display: grid; gap: 15px; }
+    .slot-card { background: white; border-left: 4px solid #667eea; padding: 15px; border-radius: 4px; display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: center; }
+    .slot-card.booked { border-left-color: #f5576c; background: #fff5f5; }
+    .slot-info { }
+    .slot-time { font-weight: 600; font-size: 1.1em; }
+    .slot-date { color: #999; font-size: 0.9em; }
+    .slot-status { padding: 6px 12px; border-radius: 4px; font-size: 0.85em; font-weight: 600; }
+    .status-available { background: #d4edda; color: #155724; }
+    .status-booked { background: #f8d7da; color: #721c24; }
+    
+    .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #ddd; }
+    .tab { padding: 10px 15px; border-bottom: 3px solid transparent; cursor: pointer; }
+    .tab.active { border-bottom-color: #667eea; color: #667eea; font-weight: 600; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    
+    .quick-actions { display: flex; gap: 10px; margin-bottom: 20px; }
+    .action-btn { padding: 10px 15px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer; }
+    .action-btn:hover { background: #f0f0f0; }
+    .action-btn.primary { background: #667eea; color: white; border-color: #667eea; }
+  </style>
+</head>
+<body>
+  <main class="slots-container">
+    <header>
+      <div style="margin-bottom: 20px;">
+        <p class="kicker">Gestion de disponibilité</p>
+        <h1>Mes Créneaux Horaires</h1>
+        <p class="subtitle">Gérez votre calendrier et définissez vos disponibilités</p>
+      </div>
+      <a class="btn ghost" href="provider-space.html">← Retour</a>
+    </header>
+
+    <!-- Actions rapides -->
+    <div class="quick-actions">
+      <button class="action-btn primary" onclick="showTab('add-slot')">➕ Ajouter un créneau</button>
+      <button class="action-btn" onclick="showTab('calendar')">📅 Calendrier</button>
+      <button class="action-btn" onclick="showTab('slots')">📋 Todos mes créneaux</button>
+    </div>
+
+    <!-- FORMULAIRE AJOUTER CRÉNEAU -->
+    <div id="add-slot" class="tab-content active">
+      <h2>Ajouter un nouvelle disponibilité</h2>
+      <form id="addSlotForm" class="form-section">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div class="form-group">
+            <label>Date *</label>
+            <input type="date" id="slotDate" required />
+          </div>
+          <div class="form-group">
+            <label>Type de créneau *</label>
+            <select id="slotType" required>
+              <option value="">-- Sélectionner --</option>
+              <option value="demi-journee">Demi-journée (4h)</option>
+              <option value="journee">Journée (8h)</option>
+              <option value="custom">Personnalisé</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="customTimeGroup" style="display: none;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="form-group">
+              <label>Heure de début *</label>
+              <input type="time" id="slotStartTime" />
+            </div>
+            <div class="form-group">
+              <label>Heure de fin *</label>
+              <input type="time" id="slotEndTime" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Prix par heure (TND)</label>
+          <input type="number" id="slotPrice" min="0" step="0.01" placeholder="0.00" />
+        </div>
+
+        <div class="form-group">
+          <label>Description / Notes</label>
+          <textarea id="slotNotes" rows="3" placeholder="Ex: Réunion video, consultation..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button type="submit" class="btn primary" style="padding: 10px 15px;">Ajouter ce créneau</button>
+          <button type="reset" class="btn" style="padding: 10px 15px; background: #ddd; border: none; border-radius: 4px; cursor: pointer;">Réinitialiser</button>
+        </div>
+        <p id="slotFormStatus" style="margin-top: 10px;"></p>
+      </form>
+    </div>
+
+    <!-- CALENDRIER -->
+    <div id="calendar" class="tab-content">
+      <h2>Calendrier de disponibilité</h2>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+
+    <!-- LISTE DES CRÉNEAUX -->
+    <div id="slots" class="tab-content">
+      <h2>Tous mes créneaux</h2>
+      
+      <div style="margin-bottom: 15px;">
+        <label style="display: flex; align-items: center; gap: 10px;">
+          <input type="checkbox" id="filterBooked" onchange="filterSlots()" /> Afficher aussi les réservés
+        </label>
+      </div>
+
+      <p id="slotsStatus" class="status">Chargement des créneaux...</p>
+      <div id="slotsList" class="slots-list"></div>
+    </div>
+
+  </main>
+
+  <script>
+    const slotTypeSelect = document.getElementById("slotType");
+    const customTimeGroup = document.getElementById("customTimeGroup");
+    const addSlotForm = document.getElementById("addSlotForm");
+
+    // Montrer/masquer les heures personnalisées
+    slotTypeSelect.addEventListener("change", () => {
+      customTimeGroup.style.display = slotTypeSelect.value === "custom" ? "grid" : "none";
+    });
+
+    // Afficher onglet
+    function showTab(tabName) {
+      document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".action-btn").forEach(el => el.classList.remove("primary"));
+      document.getElementById(tabName)?.classList.add("active");
+      event.target.classList.add("primary");
+    }
+
+    // Mock slots data
+    const mockSlots = [
+      { id: 1, date: "2026-04-05", startTime: "09:00", endTime: "13:00", status: "available", price: 50 },
+      { id: 2, date: "2026-04-05", startTime: "14:00", endTime: "18:00", status: "booked", price: 50 },
+      { id: 3, date: "2026-04-06", startTime: "10:00", endTime: "18:00", status: "available", price: 100 }
+    ];
+
+    function loadSlots() {
+      const slotsList = document.getElementById("slotsList");
+      const filterBooked = document.getElementById("filterBooked").checked;
+      
+      const filtered = filterBooked ? mockSlots : mockSlots.filter(s => s.status === "available");
+      
+      slotsList.innerHTML = filtered.map(slot => `
+        <div class="slot-card ${slot.status === "booked" ? "booked" : ""}">
+          <div class="slot-info">
+            <div class="slot-time">${slot.startTime} - ${slot.endTime}</div>
+            <div class="slot-date">${new Date(slot.date).toLocaleDateString()} • ${slot.price} TND/h</div>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <span class="slot-status ${slot.status === "available" ? "status-available" : "status-booked"}">
+              ${slot.status === "available" ? "Disponible" : "Réservé"}
+            </span>
+            ${slot.status === "available" ? `<button onclick="deleteSlot(${slot.id})" style="padding: 6px 12px; background: #f5576c; color: white; border: none; border-radius: 4px; cursor: pointer;">Supprimer</button>` : ""}
+          </div>
+        </div>
+      `).join("");
+      document.getElementById("slotsStatus").textContent = "";
+    }
+
+    function filterSlots() {
+      loadSlots();
+    }
+
+    function deleteSlot(slotId) {
+      if (confirm("Supprimer ce créneau ?")) {
+        alert(`Créneau #${slotId} supprimé`);
+        loadSlots();
+      }
+    }
+
+    function generateCalendar() {
+      // Générer un simple calendrier pour le mois en cours
+      const calendarGrid = document.getElementById("calendarGrid");
+      calendarGrid.innerHTML = `
+        <div class="calendar-card">
+          <div class="calendar-header">
+            <span>Avril 2026</span>
+            <div style="display: flex; gap: 5px;">
+              <button onclick="alert('Mois précédent')" style="border: none; background: none; cursor: pointer;">←</button>
+              <button onclick="alert('Mois suivant')" style="border: none; background: none; cursor: pointer;">→</button>
+            </div>
+          </div>
+          <div class="calendar-body">
+            <div class="day-header">Lun</div>
+            <div class="day-header">Mar</div>
+            <div class="day-header">Mer</div>
+            <div class="day-header">Jeu</div>
+            <div class="day-header">Ven</div>
+            <div class="day-header">Sam</div>
+            <div class="day-header">Dim</div>
+            ${[...Array(30)].map((_, i) => {
+              const day = i + 1;
+              const isToday = day === 2;
+              const isBooked = [5, 12, 19].includes(day);
+              return `<div class="day ${isToday ? "today" : ""} ${isBooked ? "booked" : ""}" onclick="selectDate(${day})">
+                ${day}
+              </div>`;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function selectDate(day) {
+      alert(`Sélectionné: 2026-04-0${day}`);
+    }
+
+    // Formulaire
+    addSlotForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const status = document.getElementById("slotFormStatus");
+      status.textContent = "✅ Créneau ajouté avec succès!";
+      status.className = "is-success";
+      status.style.color = "#155724";
+      setTimeout(() => {
+        addSlotForm.reset();
+        loadSlots();
+        showTab("slots");
+      }, 1500);
+    });
+
+    // Initialisation
+    loadSlots();
+    generateCalendar();
+  </script>
+</body>
+</html>

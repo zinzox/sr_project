@@ -132,9 +132,26 @@
           </label>
 
           <div class="auth-actions">
-            <button class="btn primary" type="submit">S'inscrire</button>
+            <button id="registerSubmitBtn" class="btn primary" type="submit">Envoyer le code</button>
             <a class="btn outline" href="login.html">J'ai deja un compte</a>
           </div>
+
+          <section id="verificationSection" class="verification-block" hidden>
+            <h3>Verification email</h3>
+            <p>Un code vous a ete envoye par email. Saisissez-le pour activer le compte.</p>
+            <label>
+              Code de verification
+              <input
+                id="verificationCode"
+                type="text"
+                name="verificationCode"
+                inputmode="numeric"
+                maxlength="6"
+                minlength="6"
+                placeholder="Entrez le code a 6 chiffres"
+              />
+            </label>
+          </section>
         </form>
 
         <p class="auth-alt">
@@ -145,5 +162,6 @@
     </section>
   </main>
   <script src="register.js?v=20260325-5"></script>
+  <script src="chatbot-widget.js"></script>
 </body>
 </html>

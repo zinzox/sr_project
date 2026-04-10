@@ -153,6 +153,12 @@ body {
   border: 1px solid #bdebdc;
 }
 
+.flash-contact-link {
+  color: #7d140d;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 .auth-form {
   display: grid;
   gap: 14px;
@@ -216,6 +222,29 @@ body {
 
 .provider-only h3 {
   font-size: 17px;
+}
+
+.verification-block {
+  margin-top: 4px;
+  border: 1px dashed #9adcc9;
+  background: #effff8;
+  border-radius: 14px;
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.verification-block h3 {
+  font-size: 17px;
+}
+
+.verification-block p {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.verification-block[hidden] {
+  display: none;
 }
 
 .provider-hint {

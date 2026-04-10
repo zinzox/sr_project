@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="client-space.css?v=20260325-5" />
+  <link rel="stylesheet" href="client-space.css?v=20260327-9" />
 </head>
 <body>
   <main class="client-page">
@@ -23,23 +23,6 @@
         <button id="clientLogoutBtn" class="btn ghost" type="button">Se deconnecter</button>
       </div>
     </header>
-
-    <section id="messengerPanel" class="messenger" hidden>
-      <aside class="messenger-list">
-        <div class="messenger-title">Conversations</div>
-        <div id="conversationsList" class="conversations-list"></div>
-      </aside>
-
-      <section class="messenger-thread">
-        <div id="threadHeader" class="thread-header">Selectionnez une conversation</div>
-        <div id="threadMessages" class="thread-messages"></div>
-        <form id="threadForm" class="thread-form">
-          <input id="threadInput" type="text" placeholder="Ecrire un message..." maxlength="2000" />
-          <button class="btn ghost" type="submit">Envoyer</button>
-        </form>
-        <p id="threadStatus" class="thread-status"></p>
-      </section>
-    </section>
 
     <section class="filters">
       <label>
@@ -58,10 +41,122 @@
       </label>
     </section>
 
-    <p id="providersStatus" class="status">Chargement des prestataires...</p>
-    <section id="providersGrid" class="providers-grid"></section>
+    <section class="module-menu" aria-label="Menu blocs client">
+      <button type="button" class="module-tab active" data-client-view-tab="providers">Prestataires</button>
+      <button type="button" class="module-tab" data-client-view-tab="quotes">Devis</button>
+      <button type="button" class="module-tab" data-client-view-tab="orders">Commandes</button>
+      <button type="button" class="module-tab" data-client-view-tab="messages">Messages</button>
+      <button type="button" class="module-tab" data-client-view-tab="dashboard">Dashboard</button>
+      <button type="button" class="module-tab" data-client-view-tab="favorites">Favoris</button>
+      <button type="button" class="module-tab" data-client-view-tab="notifications">Notifications</button>
+      <button type="button" class="module-tab" data-client-view-tab="review">Avis</button>
+    </section>
+
+    <section class="client-modules">
+      <article class="module-card module-view active" data-client-view="providers">
+        <h2>Prestataires</h2>
+        <p id="providersStatus" class="status">Chargement des prestataires...</p>
+        <section id="providersGrid" class="providers-grid"></section>
+      </article>
+
+      <article class="module-card module-view" data-client-view="quotes">
+        <h2>Mes Devis</h2>
+        <p id="quotesStatus" class="status">Chargement des devis...</p>
+        <div id="quotesList" class="simple-list"></div>
+      </article>
+
+      <article class="module-card module-view" data-client-view="orders">
+        <div class="view-header">
+          <h2>Mes Commandes</h2>
+          <button class="btn ghost" type="button" onclick="openCreateOrderModal()">+ Nouvelle demande</button>
+        </div>
+        <p id="ordersStatus" class="status">Chargement des commandes...</p>
+        <div id="ordersList" class="simple-list"></div>
+
+        <!-- Modal: Créer une nouvelle commande -->
+        <div id="createOrderModal" class="modal" style="display:none;">
+          <div class="modal-content">
+            <span class="close" onclick="closeCreateOrderModal()">&times;</span>
+            <h3>Demander une commande</h3>
+            <form id="createOrderForm">
+              <div class="form-group">
+                <label for="orderProviderSelect">Choisir un prestataire:</label>
+                <select id="orderProviderSelect" required>
+                  <option value="">-- Sélectionner un prestataire --</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Créer la demande</button>
+            </form>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card module-view" data-client-view="messages">
+        <h2>Messages</h2>
+        <section id="messengerPanel" class="messenger">
+          <aside class="messenger-list">
+            <div class="messenger-title">Conversations</div>
+            <div id="conversationsList" class="conversations-list"></div>
+          </aside>
+
+          <section class="messenger-thread">
+            <div id="threadHeader" class="thread-header" style="display: flex; justify-content: space-between; align-items: center;">
+              <span id="threadHeaderText">Selectionnez une conversation</span>
+              <button id="commanderBtn" class="btn ghost" type="button" onclick="commanderFromConversation()" style="display: none; background: #667eea; color: white; padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer;">Commander</button>
+            </div>
+            <div id="threadMessages" class="thread-messages"></div>
+            <form id="threadForm" class="thread-form">
+              <input id="threadInput" type="text" placeholder="Ecrire un message..." maxlength="2000" />
+              <button class="btn ghost" type="submit">Envoyer</button>
+            </form>
+            <p id="threadStatus" class="thread-status"></p>
+          </section>
+        </section>
+      </article>
+
+      <article class="module-card module-view" data-client-view="dashboard">
+        <h2>Dashboard client</h2>
+        <div class="kpi-grid">
+          <div><span>Demandes actives</span><strong id="clientKpiActiveQuotes">0</strong></div>
+          <div><span>Favoris</span><strong id="clientKpiFavorites">0</strong></div>
+          <div><span>Depenses</span><strong id="clientKpiSpent">0.00</strong></div>
+        </div>
+      </article>
+
+      <article class="module-card module-view" data-client-view="favorites">
+        <h2>Mes favoris</h2>
+        <div id="favoritesList" class="simple-list"></div>
+      </article>
+
+      <article class="module-card module-view" data-client-view="notifications">
+        <h2>Notifications</h2>
+        <div id="notificationsList" class="simple-list"></div>
+      </article>
+
+      <article class="module-card module-view" data-client-view="review">
+        <h2>Laisser un avis</h2>
+        <form id="reviewForm" class="review-form">
+          <label>
+            Email prestataire
+            <input id="reviewProviderEmail" type="email" placeholder="provider@email.com" required />
+          </label>
+          <label>
+            Note (1-5)
+            <input id="reviewRating" type="number" min="1" max="5" value="5" required />
+          </label>
+          <label>
+            Commentaire
+            <input id="reviewComment" type="text" maxlength="400" placeholder="Votre avis" />
+          </label>
+          <button class="btn ghost" type="submit">Publier l'avis</button>
+        </form>
+        <p id="reviewStatus" class="module-status"></p>
+      </article>
+    </section>
+
   </main>
 
-  <script src="client-space.js?v=20260325-6"></script>
+  <script src="client-space.js?v=20260327-13"></script>
+  <script src="chatbot-widget.js"></script>
 </body>
 </html>

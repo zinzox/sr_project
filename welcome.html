@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bienvenue — Sarbi Rohek v2.0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: Poppins, sans-serif; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .welcome-card {
+      background: white;
+      border-radius: 16px;
+      padding: 60px 40px;
+      max-width: 700px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+      animation: slideUp 0.6s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .logo { font-size: 4em; margin-bottom: 20px; }
+    
+    h1 { 
+      font-size: 2.5em; 
+      color: #667eea; 
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      font-size: 1.1em;
+      color: #666;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+    
+    .features-list {
+      background: #f9f9f9;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 40px;
+      text-align: left;
+    }
+    
+    .features-list h3 { color: #667eea; margin-bottom: 15px; }
+    .features-list ul { list-style: none; }
+    .features-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .features-list li:last-child { border-bottom: none; }
+    .features-list li:before { content: "✅ "; color: #4caf50; font-weight: 600; }
+    
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .btn {
+      padding: 15px 25px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1em;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      display: inline-block;
+      font-family: Poppins, sans-serif;
+    }
+    
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #5568d3;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-secondary {
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+    
+    .btn-secondary:hover {
+      background: #667eea;
+      color: white;
+      transform: translateY(-3px);
+    }
+    
+    .info {
+      background: #e3f2fd;
+      border-left: 4px solid #667eea;
+      padding: 15px;
+      border-radius: 4px;
+      color: #084298;
+      margin-top: 20px;
+      text-align: left;
+    }
+    
+    .info strong { display: block; margin-bottom: 5px; }
+    
+    @media (max-width: 600px) {
+      .welcome-card { padding: 30px 20px; }
+      h1 { font-size: 1.8em; }
+      .buttons { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="welcome-card">
+    <div class="logo">🚀</div>
+    <h1>Sarbi Rohek v2.0</h1>
+    <div class="subtitle">
+      <strong>Application 100% Fonctionnelle</strong>
+      <br />
+      Avec 9 nouvelles pages et toutes les fonctionnalités déployées
+    </div>
+
+    <div class="features-list">
+      <h3>✨ Ce qui a été ajouté</h3>
+      <ul>
+        <li>Demandes de Devis (quotes.html)</li>
+        <li>Gestion des Commandes (orders.html)</li>
+        <li>Système d'Avis & Évaluations (reviews.html)</li>
+        <li>Portfolio & Certifications (portfolio.html)</li>
+        <li>Calendrier & Créneaux (slots.html)</li>
+        <li>Dashboard Analytics (dashboard.html)</li>
+        <li>Messagerie Avancée (messaging.html)</li>
+        <li>Annuaire des Prestataires (directory.html)</li>
+        <li>Centre de Contrôle (features.html)</li>
+      </ul>
+    </div>
+
+    <div class="buttons">
+      <a href="features.html" class="btn btn-primary">🎯 Découvrir les Features</a>
+      <a href="index.html" class="btn btn-secondary">🏠 Retour Accueil</a>
+    </div>
+
+    <div class="buttons">
+      <a href="login.html" class="btn btn-primary">🔐 Connexion</a>
+      <a href="register.html" class="btn btn-secondary">📝 Inscription</a>
+    </div>
+
+    <div class="info">
+      <strong>💡 Point de départ recommandé:</strong>
+      Consultez la page <a href="features.html" style="color: inherit; font-weight: 600; text-decoration: underline;">Features</a> pour explorer toutes les nouvelles fonctionnalités.
+    </div>
+
+    <div style="margin-top: 30px; font-size: 0.9em; color: #999;">
+      <p>Tous les servlets sont mappés • MySQL est connecté • Tomcat est actif</p>
+      <p style="margin-top: 5px;">Version 2.0 • Prête pour production • 02 Avril 2026</p>
+    </div>
+  </div>
+</body>
+</html>

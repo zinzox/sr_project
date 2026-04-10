@@ -1,0 +1,51 @@
+<div id="orderRequestsView" data-provider-view="order-requests" style="display:none;">
+  <div class="view-header">
+    <h2>Demandes de commandes</h2>
+    <div id="orderRequestsStatus" class="status-message"></div>
+  </div>
+
+  <div class="order-requests-container">
+    <div id="orderRequestsList" class="list-group"></div>
+  </div>
+
+  <!-- Modal: Remplir les détails -->
+  <div id="fillDetailsModal" class="modal" style="display:none;">
+    <div class="modal-content" style="max-width: 600px;">
+      <span class="close" onclick="closeFillDetailsModal()">&times;</span>
+      <h3>Remplir les détails de la commande</h3>
+      <form id="fillDetailsForm">
+        <input type="hidden" id="modalOrderId" />
+
+        <div class="form-group">
+          <label for="detailTitle">Titre de la prestation *</label>
+          <input type="text" id="detailTitle" placeholder="Ex: Logo design" required />
+        </div>
+
+        <div class="form-group">
+          <label for="detailDescription">Description détaillée *</label>
+          <textarea id="detailDescription" rows="5" placeholder="Décrivez votre prestation..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="detailPrice">Prix (TND) *</label>
+          <input type="number" id="detailPrice" step="0.01" min="0" placeholder="Ex: 100.00" required />
+        </div>
+
+        <div class="form-group">
+          <label for="detailDeliveryDate">Date de livraison estimée *</label>
+          <input type="datetime-local" id="detailDeliveryDate" required />
+        </div>
+
+        <div class="form-group">
+          <label for="detailRevisions">Nombre de révisions incluses</label>
+          <input type="number" id="detailRevisions" min="1" value="3" />
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeFillDetailsModal()">Annuler</button>
+          <button type="submit" class="btn btn-primary">Valider et envoyer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

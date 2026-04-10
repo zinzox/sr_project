@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Annuaire des Prestataires — Sarbi Rohek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Poppins, sans-serif; background: #f5f5f5; }
+    
+    .directory-page { padding: 40px 20px; max-width: 1400px; margin: 0 auto; }
+    .header { margin-bottom: 40px; }
+    .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+    .header p { color: #666; font-size: 1.1em; }
+    
+    .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; background: white; padding: 20px; border-radius: 8px; }
+    .filter-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+    .filter-group input, .filter-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+    
+    .sort-options { display: flex; gap: 10px; margin-bottom: 20px; }
+    .sort-btn { padding: 8px 15px; border: 1px solid #ddd; background: white; border-radius: 20px; cursor: pointer; font-size: 0.9em; }
+    .sort-btn.active { background: #667eea; color: white; border-color: #667eea; }
+    
+    .providers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .provider-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; }
+    .provider-card:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
+    
+    .provider-image { width: 100%; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-size: 4em; }
+    
+    .provider-content { padding: 20px; }
+    .provider-name { font-weight: 700; font-size: 1.2em; margin-bottom: 5px; }
+    .provider-activity { color: #999; font-size: 0.9em; margin-bottom: 10px; }
+    .provider-rating { display: flex; gap: 3px; align-items: center; margin-bottom: 10px; }
+    .stars { color: #ffc107; }
+    .rating-count { color: #999; font-size: 0.9em; }
+    
+    .provider-badges { display: flex; gap: 5px; margin-bottom: 10px; flex-wrap: wrap; }
+    .badge { display: inline-block; padding: 4px 8px; background: #f0f0f0; border-radius: 12px; font-size: 0.75em; font-weight: 600; color: #666; }
+    .badge.verified { background: #d4edda; color: #155724; }
+    .badge.top { background: #fff3cd; color: #856404; }
+    
+    .provider-description { color: #666; font-size: 0.95em; margin-bottom: 15px; line-height: 1.5; }
+    
+    .provider-price { font-weight: 600; font-size: 1.2em; color: #667eea; margin-bottom: 15px; }
+    
+    .provider-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn { padding: 10px 15px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-family: Poppins, sans-serif; text-align: center; }
+    .btn-primary { background: #667eea; color: white; }
+    .btn-primary:hover { background: #5568d3; }
+    .btn-secondary { background: #f0f0f0; color: #333; }
+    .btn-secondary:hover { background: #e0e0e0; }
+    
+    .pagination { display: flex; gap: 10px; justify-content: center; margin-top: 40px; }
+    .page-btn { padding: 8px 12px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer; }
+    .page-btn.active { background: #667eea; color: white; border-color: #667eea; }
+    
+    .no-results { text-align: center; padding: 60px 20px; color: #999; }
+    .no-results-icon { font-size: 4em; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <main class="directory-page">
+    <header class="header">
+      <a class="btn btn-secondary" href="index.html" style="display: inline-block; margin-bottom: 20px;">← Retour</a>
+      <h1>Annuaire des Prestataires</h1>
+      <p>Découvrez et connectez-vous avec les meilleurs talents de Tunisie</p>
+    </header>
+
+    <!-- FILTRES -->
+    <div class="filters">
+      <div class="filter-group">
+        <label>🔍 Rechercher</label>
+        <input type="text" id="searchInput" placeholder="Nom, compétence..." />
+      </div>
+      <div class="filter-group">
+        <label>📂 Catégorie</label>
+        <select id="categoryFilter">
+          <option value="">Tous les services</option>
+          <option value="VIDEO_MAKER">Vidéo</option>
+          <option value="FREELANCER">Développement</option>
+          <option value="DESIGNER">Design</option>
+          <option value="ARTISANT">Artisanat</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>⭐ Note minimale</label>
+        <select id="ratingFilter">
+          <option value="">Toutes les notes</option>
+          <option value="5">★★★★★ 5 étoiles</option>
+          <option value="4">★★★★☆ 4+ étoiles</option>
+          <option value="3">★★★☆☆ 3+ étoiles</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>💰 Prix (TND/h)</label>
+        <input type="number" id="priceFilter" placeholder="Max..." min="0" />
+      </div>
+    </div>
+
+    <!-- OPTIONS DE TRI -->
+    <div class="sort-options">
+      <button class="sort-btn active" onclick="sortProviders('recent')">🕐 Récent</button>
+      <button class="sort-btn" onclick="sortProviders('popular')">🔥 Popular</button>
+      <button class="sort-btn" onclick="sortProviders('rating')">⭐ Note</button>
+      <button class="sort-btn" onclick="sortProviders('price-asc')">💰 Prix ↑</button>
+      <button class="sort-btn" onclick="sortProviders('price-desc')">💰 Prix ↓</button>
+    </div>
+
+    <!-- GRILLE DES PRESTATAIRES -->
+    <div id="providersGrid" class="providers-grid">
+      <!-- Les prestataires seront chargés ici -->
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+      <button class="page-btn active" onclick="goToPage(1)">1</button>
+      <button class="page-btn" onclick="goToPage(2)">2</button>
+      <button class="page-btn" onclick="goToPage(3)">3</button>
+      <span style="color: #999; padding: 8px;">...</span>
+      <button class="page-btn" onclick="goToPage(10)">10</button>
+    </div>
+  </main>
+
+  <script>
+    const mockProviders = [
+      {
+        id: 1,
+        name: "Fatma Barouni",
+        activity: "Montage Vidéo",
+        category: "VIDEO_MAKER",
+        rating: 4.8,
+        reviews: 24,
+        price: 50,
+        icon: "🎬",
+        description: "Monteuse vidéo créative avec 8 ans d'expérience. Spécialisée en publicités et contenus réseaux sociaux.",
+        badges: ["verified", "top"],
+        status: "En ligne"
+      },
+      {
+        id: 2,
+        name: "Dorra Mharouech",
+        activity: "Développement Web",
+        category: "FREELANCER",
+        rating: 4.9,
+        reviews: 18,
+        price: 60,
+        icon: "💻",
+        description: "Développeuse full-stack React/Node.js. Crée des sites modernes et performants.",
+        badges: ["verified"],
+        status: "En ligne"
+      },
+      {
+        id: 3,
+        name: "Mohamed Ben Ali",
+        activity: "Design Graphique",
+        category: "DESIGNER",
+        rating: 4.7,
+        reviews: 15,
+        price: 40,
+        icon: "🎨",
+        description: "Designer UX/UI passionné. Crée des interfaces intuitives et esthétiques.",
+        badges: ["verified"],
+        status: "Hors ligne"
+      },
+      {
+        id: 4,
+        name: "Aïcha Khaled",
+        activity: "Artisanat",
+        category: "ARTISANT",
+        rating: 4.6,
+        reviews: 12,
+        price: 30,
+        icon: "🧵",
+        description: "Artisane créative. Fabrique des articles uniques handmade.",
+        badges: [],
+        status: "En ligne"
+      },
+      {
+        id: 5,
+        name: "Omar Sidi",
+        activity: "Développement Mobile",
+        category: "FREELANCER",
+        rating: 4.8,
+        reviews: 21,
+        price: 70,
+        icon: "📱",
+        description: "Dev Flutter et React Native. Crée des apps iOS et Android.",
+        badges: ["verified", "top"],
+        status: "En ligne"
+      },
+      {
+        id: 6,
+        name: "Leila Zouari",
+        activity: "Coaching Digital",
+        category: "FREELANCER",
+        rating: 4.5,
+        reviews: 8,
+        price: 45,
+        icon: "🎓",
+        description: "Coach en marketing digital et stratégie réseaux sociaux.",
+        badges: ["verified"],
+        status: "En ligne"
+      }
+    ];
+
+    function renderProviders(providers) {
+      const grid = document.getElementById("providersGrid");
+      
+      if (!providers || providers.length === 0) {
+        grid.innerHTML = `
+          <div class="no-results" style="grid-column: 1 / -1;">
+            <div class="no-results-icon">🔍</div>
+            <p>Aucun prestataire ne correspond à vos critères</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">Essayez d'ajuster vos filtres ou contactez le support</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = providers.map(p => {
+        const rating = p.rating || 4.5;
+        const reviews = p.reviews || 0;
+        const price = p.price || p.hourlyRate || 50;
+        const name = `${p.firstName || ''} ${p.lastName || ''}`.trim() || 'Prestataire';
+        const activity = p.mainActivity || p.serviceType || p.activity || 'Service';
+        const description = p.workDescription || p.description || 'Prestataire qualifié';
+        const status = p.status || 'En ligne';
+        
+        return `
+        <div class="provider-card">
+          <div class="provider-image">👤</div>
+          <div class="provider-content">
+            <div class="provider-name">${name}</div>
+            <div class="provider-activity">${activity}</div>
+            
+            <div class="provider-rating">
+              <span class="stars">${"★".repeat(Math.floor(rating))}${"☆".repeat(5-Math.floor(rating))}</span>
+              <span class="rating-count">${rating} (${reviews})</span>
+            </div>
+
+            <div class="provider-badges">
+              ${p.verified ? '<span class="badge verified">✓ Vérifié</span>' : ''}
+              ${reviews > 10 ? '<span class="badge top">⭐ Top</span>' : ''}
+              <span class="badge">${status}</span>
+            </div>
+
+            <div class="provider-description">${description}</div>
+            <div class="provider-price">${price} TND/h</div>
+
+            <div class="provider-actions">
+              <button class="btn btn-primary" onclick="contactProvider('${name}', '${p.email || ''}')">Contacter</button>
+              <button class="btn btn-secondary" onclick="viewProfile('${name}')">Profil</button>
+            </div>
+          </div>
+        </div>
+      `}).join("");
+    }
+
+    async function loadAllProviders() {
+      try {
+        const response = await fetch("/sarbi_rohek/api/providers/all");
+        if (!response.ok) {
+          renderProviders([]);
+          return;
+        }
+
+        const providers = await response.json();
+        renderProviders(providers);
+      } catch (error) {
+        console.error("Erreur lors du chargement des prestataires", error);
+        renderProviders([]);
+      }
+    }
+
+    function sortProviders(sortType) {
+      document.querySelectorAll(".sort-btn").forEach(btn => btn.classList.remove("active"));
+      event.target.classList.add("active");
+
+      let sorted = [...mockProviders];
+      switch(sortType) {
+        case "rating":
+          sorted.sort((a, b) => b.rating - a.rating);
+          break;
+        case "price-asc":
+          sorted.sort((a, b) => a.price - b.price);
+          break;
+        case "price-desc":
+          sorted.sort((a, b) => b.price - a.price);
+          break;
+        case "popular":
+          sorted.sort((a, b) => b.reviews - a.reviews);
+          break;
+      }
+      renderProviders(sorted);
+    }
+
+    function contactProvider(name) {
+      alert(`Contacter ${name} - À implémenter avec messagerie`);
+    }
+
+    function viewProfile(name) {
+      alert(`Profil de ${name} - À implémenter`);
+    }
+
+    function goToPage(page) {
+      document.querySelectorAll(".page-btn").forEach(btn => btn.classList.remove("active"));
+      event.target.classList.add("active");
+      renderProviders(mockProviders);
+    }
+
+    renderProviders(mockProviders);
+  </script>
+</body>
+</html>

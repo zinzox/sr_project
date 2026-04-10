@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nouvelles Fonctionnalités — Sarbi Rohek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Poppins, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+    
+    .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+    
+    .header { text-align: center; color: white; margin-bottom: 60px; }
+    .header h1 { font-size: 3em; margin-bottom: 10px; }
+    .header p { font-size: 1.2em; opacity: 0.9; }
+    
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 40px; }
+    
+    .feature-card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; }
+    .feature-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+    
+    .feature-icon { font-size: 3em; margin-bottom: 15px; }
+    .feature-title { font-size: 1.3em; font-weight: 700; margin-bottom: 10px; color: #333; }
+    .feature-desc { color: #666; line-height: 1.6; margin-bottom: 20px; }
+    .feature-badges { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 15px; }
+    .badge { display: inline-block; padding: 4px 10px; background: #f0f0f0; border-radius: 12px; font-size: 0.8em; color: #666; }
+    .badge.new { background: #ffd700; color: #333; font-weight: 600; }
+    .badge.popular { background: #ff6b6b; color: white; font-weight: 600; }
+    
+    .btn { display: inline-block; padding: 12px 20px; background: #667eea; color: white; text-decoration: none; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: background 0.2s; width: 100%; text-align: center; }
+    .btn:hover { background: #5568d3; }
+    
+    .status-bar { background: white; padding: 20px; border-radius: 8px; margin-bottom: 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
+    .status-item { text-align: center; }
+    .status-number { font-size: 2em; font-weight: 700; color: #667eea; }
+    .status-label { color: #666; font-size: 0.9em; }
+    
+    .back-link { color: white; text-decoration: none; display: inline-block; margin-bottom: 30px; padding: 10px 15px; background: rgba(255,255,255,0.2); border-radius: 6px; }
+    .back-link:hover { background: rgba(255,255,255,0.3); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a class="back-link" href="index.html">← Retour à l'accueil</a>
+
+    <header class="header">
+      <h1>🚀 Nouvelles Fonctionnalités</h1>
+      <p>Découvrez toutes les capacités de la plateforme Sarbi Rohek</p>
+    </header>
+
+    <!-- STATISTIQUES -->
+    <div class="status-bar">
+      <div class="status-item">
+        <div class="status-number">8</div>
+        <div class="status-label">Nouvelles pages</div>
+      </div>
+      <div class="status-item">
+        <div class="status-number">100+</div>
+        <div class="status-label">Fonctionnalités</div>
+      </div>
+      <div class="status-item">
+        <div class="status-number">∞</div>
+        <div class="status-label">Possibilités</div>
+      </div>
+    </div>
+
+    <!-- GRILLE DES FONCTIONNALITÉS -->
+    <div class="features-grid">
+      <!-- 1. DEVIS -->
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <div class="feature-title">Demandes de Devis</div>
+        <div class="feature-desc">Envoyez des demandes de devis détaillées à des prestataires et suivez leurs réponses en temps réel.</div>
+        <div class="feature-badges">
+          <span class="badge new">NEW</span>
+          <span class="badge">Clients</span>
+        </div>
+        <a class="btn" href="quotes.html">Accéder →</a>
+      </div>
+
+      <!-- 2. COMMANDES & PAIEMENTS -->
+      <div class="feature-card">
+        <div class="feature-icon">💳</div>
+        <div class="feature-title">Mes Commandes</div>
+        <div class="feature-desc">Gérez toutes vos commandes, paiements et transactions en un seul endroit avec suivi en temps réel.</div>
+        <div class="feature-badges">
+          <span class="badge new">NEW</span>
+          <span class="badge">Clients</span>
+        </div>
+        <a class="btn" href="orders.html">Accéder →</a>
+      </div>
+
+      <!-- 3. AVIS & ÉVALUATIONS -->
+      <div class="feature-card">
+        <div class="feature-icon">⭐</div>
+        <div class="feature-title">Avis & Évaluations</div>
+        <div class="feature-desc">Publiez vos avis sur les prestataires et consultez les évaluations des autres clients pour faire le bon choix.</div>
+        <div class="feature-badges">
+          <span class="badge new">NEW</span>
+          <span class="badge popular">POPULAIRE</span>
+          <span class="badge">Clients</span>
+        </div>
+        <a class="btn" href="reviews.html">Accéder →</a>
+      </div>
+
+      <!-- 4. PORTFOLIO & GALERIE -->
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <div class="feature-title">Portfolio & Certifications</div>
+        <div class="feature-desc">Présentez vos compétences, projets réalisés et certifications pour renforcer votre crédibilité.</div>
+        <div class="feature-badges">
+          <span class="badge new">NEW</span>
+          <span class="badge">Prestataires</span>
+        </div>
+        <a class="btn" href="portfolio.html">Accéder →</a>
+      </div>
+
+      <!-- 5. CRÉNEAUX HORAIRES -->
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <div class="feature-title">Mes Créneaux</div>
+        <div class="feature-desc">Gérez votre calendrier, définissez vos disponibilités et laissez les clients réserver directement.</div>
+        <div class="feature-badges">
+          <span class="badge new">NEW</span>
+          <span class="badge">Prestataires</span>
+        </div>
+        <a class="btn" href="slots.html">Accéder →</a>
+      </div>
+
+      <!-- 6. DASHBOARD ANALYTICS -->
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Dashboard Analytics</div>
+        <div class="feature-desc">Visualisez vos statistiques, revenus, demandes actives et tendances avec des graphiques détaillés.</div>
+        <div class="feature-badges">
+          <span class="badge new">NEW</span>
+          <span class="badge">Clients</span>
+        </div>
+        <a class="btn" href="dashboard.html">Accéder →</a>
+      </div>
+
+      <!-- 7. MESSAGERIE AVANCÉE -->
+      <div class="feature-card">
+        <div class="feature-icon">💬</div>
+        <div class="feature-title">Messagerie</div>
+        <div class="feature-desc">Communiquez en temps réel avec les prestataires. Chat fluide, notifications et conversations organisées.</div>
+        <div class="feature-badges">
+          <span class="badge new">NEW DESIGN</span>
+          <span class="badge popular">POPULAIRE</span>
+        </div>
+        <a class="btn" href="messaging.html">Accéder →</a>
+      </div>
+
+      <!-- 8. ANNUAIRE COMPLET -->
+      <div class="feature-card">
+        <div class="feature-icon">📖</div>
+        <div class="feature-title">Annuaire des Prestataires</div>
+        <div class="feature-desc">Découvrez tous les prestataires disponibles, filtrez par catégorie, note et prix pour trouver le meilleur match.</div>
+        <div class="feature-badges">
+          <span class="badge new">NEW</span>
+          <span class="badge">Clients</span>
+        </div>
+        <a class="btn" href="directory.html">Accéder →</a>
+      </div>
+    </div>
+
+    <!-- INFO DE DÉMARRAGE -->
+    <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+      <h2 style="margin-bottom: 15px; color: #667eea;">🎯 Prochaines étapes</h2>
+      <ul style="list-style: none; line-height: 2;">
+        <li>✅ <strong>Accédez à chaque page</strong> pour explorer les nouvelles fonctionnalités</li>
+        <li>✅ <strong>Testez la messagerie</strong> pour discuter avec les prestataires</li>
+        <li>✅ <strong>Consultez l'annuaire</strong> pour découvrir les meilleurs talents</li>
+        <li>✅ <strong>Suivez vos commandes</strong> en temps réel depuis le dashboard</li>
+        <li>✅ <strong>Partagez vos avis</strong> pour aider la communauté</li>
+      </ul>
+      
+      <div style="margin-top: 30px; padding: 20px; background: #f0f0f0; border-radius: 8px;">
+        <strong>💡 Besoin d'aide ?</strong> Consultez la <a href="support-presentation.html" style="color: #667eea; text-decoration: none;">documentation de support</a> ou contactez notre équipe.
+      </div>
+    </div>
+  </div>
+</body>
+</html>

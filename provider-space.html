@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="provider-space.css?v=20260325-4" />
+  <link rel="stylesheet" href="provider-space.css?v=20260327-9" />
 </head>
 <body>
   <main class="dashboard">
@@ -23,7 +23,16 @@
       </div>
     </header>
 
-    <section class="cards">
+    <section class="module-menu" aria-label="Menu blocs prestataire">
+      <button type="button" class="module-tab active" data-provider-view-tab="profile">Profil</button>
+      <button type="button" class="module-tab" data-provider-view-tab="messages">Messages</button>
+      <button type="button" class="module-tab" data-provider-view-tab="dashboard">Dashboard</button>
+      <button type="button" class="module-tab" data-provider-view-tab="order-requests">Demandes</button>
+      <button type="button" class="module-tab" data-provider-view-tab="pause">Pause</button>
+      <button type="button" class="module-tab" data-provider-view-tab="notifications">Notifications</button>
+    </section>
+
+    <section class="cards module-view active" data-provider-view="profile">
       <article class="card">
         <h2>Profil prestataire</h2>
         <p>Compte connecte: <strong id="providerEmail">-</strong></p>
@@ -96,7 +105,9 @@
       </article>
     </section>
 
-    <section class="messages-dashboard">
+
+
+    <section class="messages-dashboard module-view" data-provider-view="messages">
       <h2>Messages recus</h2>
       <div class="messages-layout">
         <aside class="messages-list">
@@ -114,8 +125,91 @@
         </section>
       </div>
     </section>
+
+    <section class="provider-modules">
+      <article class="card provider-module module-view active" data-provider-view="dashboard">
+        <h2>Dashboard prestataire</h2>
+        <div class="provider-kpis">
+          <div><span>Taches pas commencees</span><strong id="providerKpiPending">0</strong></div>
+          <div><span>Taches en cours</span><strong id="providerKpiInProgress">0</strong></div>
+          <div><span>Gains</span><strong id="providerKpiEarned">0.00</strong></div>
+        </div>
+      </article>
+
+      <article class="card provider-module module-view" data-provider-view="order-requests">
+        <h2>Demandes de Commandes</h2>
+        <p id="orderRequestsStatus" class="edit-status"></p>
+        <div id="orderRequestsList" class="provider-list"></div>
+
+        <!-- Modal: Remplir les détails -->
+        <div id="fillDetailsModal" class="modal" style="display:none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+          <div class="modal-content" style="background: white; padding: 2rem; border-radius: 8px; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+            <span class="close" onclick="closeFillDetailsModal()" style="cursor: pointer; float: right; font-size: 28px; font-weight: bold;">&times;</span>
+            <h3>Remplir les détails de la commande</h3>
+            <form id="fillDetailsForm">
+              <input type="hidden" id="modalOrderId" />
+
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="detailTitle" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Titre de la prestation *</label>
+                <input type="text" id="detailTitle" placeholder="Ex: Logo design" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px;" />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="detailDescription" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Description détaillée *</label>
+                <textarea id="detailDescription" rows="5" placeholder="Décrivez votre prestation..." required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-family: inherit;"></textarea>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="detailPrice" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Prix (TND) *</label>
+                <input type="number" id="detailPrice" step="0.01" min="0" placeholder="Ex: 100.00" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px;" />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="detailDeliveryDate" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Date de livraison estimée *</label>
+                <input type="datetime-local" id="detailDeliveryDate" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px;" />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="detailRevisions" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Nombre de révisions incluses</label>
+                <input type="number" id="detailRevisions" min="1" value="3" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px;" />
+              </div>
+
+              <div class="form-actions" style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button type="button" class="btn ghost" onclick="closeFillDetailsModal()">Annuler</button>
+                <button type="submit" class="btn ghost">Valider et envoyer</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </article>
+
+      <article class="card provider-module module-view" data-provider-view="pause">
+        <h2>Pause (intervalle date)</h2>
+        <form id="slotForm" class="slot-form">
+          <label>
+            Debut pause
+            <input id="slotStartAt" type="text" placeholder="YYYY-MM-DD HH:MM:SS" required />
+          </label>
+          <label>
+            Fin pause
+            <input id="slotEndAt" type="text" placeholder="YYYY-MM-DD HH:MM:SS" required />
+          </label>
+          <button class="btn ghost" type="submit">Mettre en pause</button>
+        </form>
+        <div id="providerSlotsList" class="provider-list"></div>
+        <p id="slotStatus" class="edit-status"></p>
+      </article>
+
+      <article class="card provider-module module-view" data-provider-view="notifications">
+        <h2>Notifications</h2>
+        <div id="providerNotificationsList" class="provider-list"></div>
+      </article>
+
+
+    </section>
   </main>
 
-  <script src="provider-space.js?v=20260325-4"></script>
+  <script src="provider-space.js?v=20260327-15"></script>
+  <script src="chatbot-widget.js"></script>
 </body>
 </html>

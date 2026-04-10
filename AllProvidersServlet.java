@@ -1,5 +1,7 @@
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -39,19 +41,21 @@ public class AllProvidersServlet extends HttpServlet {
 
     ProviderRepository repository = ProviderRepository.getInstance();
     List<ProviderRepository.Account> providers = repository.listAllProviders();
+    Set<String> pausedProviders = new HashSet<>(ProductFeaturesRepository.getInstance().listProvidersPausedNow());
 
     response.setStatus(HttpServletResponse.SC_OK);
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
-    response.getWriter().write(toJson(providers));
+    response.getWriter().write(toJson(providers, pausedProviders));
   }
 
-  private String toJson(List<ProviderRepository.Account> providers) {
+  private String toJson(List<ProviderRepository.Account> providers, Set<String> pausedProviders) {
     StringBuilder sb = new StringBuilder();
     sb.append("[");
 
     for (int i = 0; i < providers.size(); i++) {
       ProviderRepository.Account p = providers.get(i);
+      boolean paused = pausedProviders.contains(safe(p.email).toLowerCase());
       if (i > 0) {
         sb.append(",");
       }
@@ -69,7 +73,8 @@ public class AllProvidersServlet extends HttpServlet {
           .append("\"phone\":\"").append(escape(p.phone)).append("\",")
           .append("\"email\":\"").append(escape(p.email)).append("\",")
           .append("\"createdAt\":\"").append(escape(p.createdAt)).append("\",")
-          .append("\"photoUrl\":\"").append(escape(p.photoUrl)).append("\"")
+              .append("\"photoUrl\":\"").append(escape(p.photoUrl)).append("\",")
+              .append("\"paused\":").append(paused)
           .append("}");
     }
 

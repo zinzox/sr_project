@@ -1,7 +1,13 @@
 import java.io.IOException;
+import java.text.Normalizer;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,6 +18,19 @@ import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/api/messages/*")
 public class MessagingServlet extends HttpServlet {
+
+  private static final String ADMIN_CONTACT_EMAIL = "roheksarbi@gmail.com";
+
+  private static final Set<String> BLOCKED_WORDS = new HashSet<>(Arrays.asList(
+      "fuck",
+      "shit",
+      "bitch",
+      "putain",
+      "merde",
+      "con",
+      "connard",
+      "salope",
+      "salaud"));
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -71,6 +90,35 @@ public class MessagingServlet extends HttpServlet {
     }
 
     ProviderRepository repository = ProviderRepository.getInstance();
+    ProviderRepository.Account sender;
+    try {
+      sender = repository.findByEmail(user.email);
+    } catch (IOException ex) {
+      writeJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erreur serveur messages.");
+      return;
+    }
+
+    String senderPhone = sender == null ? "" : safe(sender.phone);
+
+    ModerationRepository moderationRepository = ModerationRepository.getInstance();
+    if (moderationRepository.isBlacklisted(user.email, senderPhone)) {
+      writeJsonError(response, HttpServletResponse.SC_FORBIDDEN,
+          "Votre compte est blacklisté. Contactez l'administrateur: " + ADMIN_CONTACT_EMAIL);
+      return;
+    }
+
+    if (moderationRepository.isTemporarilyBanned(user.email)) {
+      writeJsonError(response, HttpServletResponse.SC_FORBIDDEN,
+          "Votre compte est temporairement suspendu (ban 5 minutes). Réessayez plus tard.");
+      return;
+    }
+
+    if (containsInappropriateContent(message)) {
+      writeJsonError(response, HttpServletResponse.SC_BAD_REQUEST,
+          "Message bloque: contenu inapproprie detecte.");
+      return;
+    }
+
     ProviderRepository.Account recipient;
     try {
       recipient = repository.findByEmail(recipientEmail);
@@ -81,6 +129,41 @@ public class MessagingServlet extends HttpServlet {
     if (recipient == null) {
       writeJsonError(response, HttpServletResponse.SC_NOT_FOUND, "Destinataire introuvable.");
       return;
+    }
+
+    OllamaModerationService.ModerationResult moderation =
+        OllamaModerationService.getInstance().analyzeMessage(message);
+    if (moderation.available && moderation.flagged) {
+      String categoriesCsv = moderation.categories.stream().collect(Collectors.joining(","));
+      moderationRepository.saveAlert(
+          user.email,
+          senderPhone,
+          recipientEmail,
+          message,
+          categoriesCsv,
+          moderation.severity,
+          moderation.riskScore,
+          moderation.reason,
+          "OLLAMA:" + System.getenv().getOrDefault("OLLAMA_MODEL", "llama3.1:8b-instruct"));
+
+        tryAutoEscalation(moderationRepository, user.email, senderPhone, moderation.riskScore);
+
+      writeJsonError(response, HttpServletResponse.SC_BAD_REQUEST,
+          "Message bloque par l'IA: " + moderation.reason);
+      return;
+    }
+
+    if (!moderation.available) {
+      moderationRepository.saveAlert(
+          user.email,
+          senderPhone,
+          recipientEmail,
+          message,
+          "SYSTEM",
+          "LOW",
+          0,
+          moderation.reason,
+          "OLLAMA:UNAVAILABLE");
     }
 
     try {
@@ -212,6 +295,60 @@ public class MessagingServlet extends HttpServlet {
 
   private String safe(String value) {
     return value == null ? "" : value.trim();
+  }
+
+  private boolean containsInappropriateContent(String message) {
+    if (message == null || message.isEmpty()) {
+      return false;
+    }
+
+    String normalized = Normalizer.normalize(message, Normalizer.Form.NFD)
+        .replaceAll("\\p{M}+", "")
+        .toLowerCase(Locale.ROOT)
+        .replaceAll("[^a-z0-9]+", " ")
+        .trim();
+
+    if (normalized.isEmpty()) {
+      return false;
+    }
+
+    String[] tokens = normalized.split("\\s+");
+    for (String token : tokens) {
+      if (BLOCKED_WORDS.contains(token)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private void tryAutoEscalation(ModerationRepository moderationRepository, String senderEmail,
+      String senderPhone, int riskScore) throws IOException {
+    int recent = moderationRepository.countRecentAlertsForSender(senderEmail, 24);
+    if (recent >= 5 || riskScore >= 95) {
+      moderationRepository.applyBlacklist(senderEmail, senderPhone,
+          "Escalade auto IA: recidive ou risque critique");
+      moderationRepository.logAdminAction(
+          "AUTO_BLACKLIST",
+          senderEmail,
+          senderPhone,
+          "Escalade automatique declenchee",
+          "SYSTEM",
+          -1L);
+      return;
+    }
+
+    if (recent >= 3 || riskScore >= 80) {
+      moderationRepository.applyTemporaryBan(senderEmail, senderPhone, 5,
+          "Escalade auto IA: plusieurs alertes recentes");
+      moderationRepository.logAdminAction(
+          "AUTO_TEMP_BAN_5_MIN",
+          senderEmail,
+          senderPhone,
+          "Escalade automatique declenchee",
+          "SYSTEM",
+          -1L);
+    }
   }
 
   private void writeJsonError(HttpServletResponse response, int status, String message) throws IOException {

@@ -96,6 +96,114 @@
     <url-pattern>/api/messages/*</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>ReviewsServlet</servlet-name>
+    <servlet-class>ReviewsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ReviewsServlet</servlet-name>
+    <url-pattern>/api/reviews</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>FavoritesServlet</servlet-name>
+    <servlet-class>FavoritesServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>FavoritesServlet</servlet-name>
+    <url-pattern>/api/favorites/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>SlotsServlet</servlet-name>
+    <servlet-class>SlotsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SlotsServlet</servlet-name>
+    <url-pattern>/api/slots/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>QuotesServlet</servlet-name>
+    <servlet-class>QuotesServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>QuotesServlet</servlet-name>
+    <url-pattern>/api/quotes/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>OrdersServlet</servlet-name>
+    <servlet-class>OrdersServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>OrdersServlet</servlet-name>
+    <url-pattern>/api/orders/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>NotificationsServlet</servlet-name>
+    <servlet-class>NotificationsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NotificationsServlet</servlet-name>
+    <url-pattern>/api/notifications/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>DashboardServlet</servlet-name>
+    <servlet-class>DashboardServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DashboardServlet</servlet-name>
+    <url-pattern>/api/dashboard</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>CommerceServlet</servlet-name>
+    <servlet-class>CommerceServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CommerceServlet</servlet-name>
+    <url-pattern>/api/commerce/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>LoyaltyServlet</servlet-name>
+    <servlet-class>LoyaltyServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LoyaltyServlet</servlet-name>
+    <url-pattern>/api/loyalty/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>ProvidersSearchServlet</servlet-name>
+    <servlet-class>ProvidersSearchServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProvidersSearchServlet</servlet-name>
+    <url-pattern>/api/providers/search</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>AdminModerationServlet</servlet-name>
+    <servlet-class>AdminModerationServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AdminModerationServlet</servlet-name>
+    <url-pattern>/api/admin/moderation/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>ChatbotServlet</servlet-name>
+    <servlet-class>ChatbotServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ChatbotServlet</servlet-name>
+    <url-pattern>/api/chatbot</url-pattern>
+  </servlet-mapping>
+
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
