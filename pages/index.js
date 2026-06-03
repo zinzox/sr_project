@@ -2,7 +2,7 @@ export default function Home() {
   return (
     <div style={{ padding: '2rem' }}>
       <h1>Sarbi Rohek - API Backend</h1>
-      <p>Plateforme de services - Hébergée sur Vercel</p>
+      <p>Plateforme de services</p>
       
       <h2>Endpoints disponibles:</h2>
       <ul>
@@ -13,7 +13,6 @@ export default function Home() {
 
       <h2>Documentation:</h2>
       <ul>
-        <li><a href="/VERCEL_MIGRATION.md">Guide de migration Vercel</a></li>
         <li><a href="/DEPLOYMENT_SUMMARY.txt">Résumé de déploiement</a></li>
       </ul>
     </div>
