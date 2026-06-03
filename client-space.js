@@ -4,7 +4,7 @@ function byId(id) {
 
 // Login helper using configured backend URL (falls back to provided backend)
 async function login(email, password) {
-  const base = (typeof NEXT_PUBLIC_API_URL !== 'undefined' && NEXT_PUBLIC_API_URL) || window.NEXT_PUBLIC_API_URL || 'https://ton-backend.onrender.com';
+  const base = (typeof NEXT_PUBLIC_API_URL !== 'undefined' && NEXT_PUBLIC_API_URL) || window.NEXT_PUBLIC_API_URL || 'https://tonbackend.onrender.com';
   const url = `${base.replace(/\/$/, '')}/api/auth/login`;
 
   const res = await fetch(url, {
@@ -23,7 +23,7 @@ async function login(email, password) {
 
 // API URL helpers
 function apiBase() {
-  return (window.NEXT_PUBLIC_API_URL || 'https://ton-backend.onrender.com').replace(/\/$/, '');
+  return (window.NEXT_PUBLIC_API_URL || 'https://tonbackend.onrender.com').replace(/\/$/, '');
 }
 
 function apiPath(path) {

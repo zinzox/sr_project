@@ -7,7 +7,7 @@ function containsBlacklistMessage(message) {
 }
 
 function apiBase() {
-  return (window.NEXT_PUBLIC_API_URL || 'https://ton-backend.onrender.com').replace(/\/$/, '');
+  return (window.NEXT_PUBLIC_API_URL || 'https://tonbackend.onrender.com').replace(/\/$/, '');
 }
 
 function renderFlash(message, kind) {
@@ -82,6 +82,47 @@ function fixLoginAction() {
   }
 
   loginForm.action = apiBase() + "/api/login";
+}
+
+// Intercept form submit and use JSON POST to backend auth endpoint
+if (loginForm) {
+  loginForm.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const formData = new FormData(loginForm);
+    const email = String(formData.get('email') || '').trim();
+    const password = String(formData.get('password') || '');
+
+    if (!email || !password) {
+      renderFlash('Email et mot de passe requis.', 'error');
+      return;
+    }
+
+    try {
+      const res = await fetch(apiBase() + '/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!res.ok) {
+        const txt = await res.text().catch(() => 'Erreur de connexion');
+        renderFlash(txt || `Erreur: ${res.status}`, 'error');
+        return;
+      }
+
+      const data = await res.json().catch(() => ({}));
+      // Redirect based on role or to client-space by default
+      const role = (data.role || '').trim().toUpperCase();
+      if (role === 'PROVIDER') {
+        window.location.href = '/sarbi_rohek/provider-space.html';
+        return;
+      }
+
+      window.location.href = '/sarbi_rohek/client-space.html';
+    } catch (err) {
+      renderFlash(String(err.message || err), 'error');
+    }
+  });
 }
 
 showMessageFromQuery();

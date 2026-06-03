@@ -20,7 +20,7 @@ function esc(value) {
 }
 
 function apiBase() {
-  return (window.NEXT_PUBLIC_API_URL || 'https://ton-backend.onrender.com').replace(/\/$/, '');
+  return (window.NEXT_PUBLIC_API_URL || 'https://tonbackend.onrender.com').replace(/\/$/, '');
 }
 
 function apiPath(path) {
