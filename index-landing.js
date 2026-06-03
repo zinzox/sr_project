@@ -1,6 +1,6 @@
 (async function redirectLoggedUsers() {
   try {
-    const response = await fetch("/sarbi_rohek/api/auth/status");
+    const response = await fetch((window.NEXT_PUBLIC_API_URL || 'https://ton-backend.onrender.com').replace(/\/$/, '') + "/api/auth/status");
     if (!response.ok) {
       return;
     }

@@ -21,6 +21,22 @@ async function login(email, password) {
   return res.json();
 }
 
+// API URL helpers
+function apiBase() {
+  return (window.NEXT_PUBLIC_API_URL || 'https://ton-backend.onrender.com').replace(/\/$/, '');
+}
+
+function apiPath(path) {
+  if (!path) return apiBase();
+  if (path.startsWith('/sarbi_rohek/api')) {
+    return apiBase() + path.replace(/^\/sarbi_rohek/, '');
+  }
+  if (path.startsWith('/api')) {
+    return apiBase() + path;
+  }
+  return path;
+}
+
 const helloNameEl = byId("clientHelloName");
 const logoutBtnEl = byId("clientLogoutBtn");
 const openMessagesBtnEl = byId("openMessagesBtn");
@@ -468,7 +484,7 @@ function fillServiceTypeFilter() {
 }
 
 async function loadClientSession() {
-  const response = await fetch("/sarbi_rohek/api/auth/status");
+  const response = await fetch(apiPath("/sarbi_rohek/api/auth/status"));
   if (!response.ok) {
     redirectToLoginWithReason("");
     return null;
@@ -491,7 +507,7 @@ async function loadClientSession() {
 function startSessionGuard() {
   window.setInterval(async () => {
     try {
-      const response = await fetch("/sarbi_rohek/api/auth/status", { cache: "no-store" });
+      const response = await fetch(apiPath("/sarbi_rohek/api/auth/status"), { cache: "no-store" });
       if (!response.ok) {
         redirectToLoginWithReason("");
         return;
@@ -512,7 +528,7 @@ async function loadClientName(sessionData) {
   let lastName = (sessionData.lastName || "").trim();
 
   if (!firstName && !lastName) {
-    const profileResponse = await fetch("/sarbi_rohek/api/auth/profile");
+    const profileResponse = await fetch(apiPath("/sarbi_rohek/api/auth/profile"));
     if (profileResponse.ok) {
       const profile = await profileResponse.json();
       firstName = (profile.firstName || "").trim();
@@ -574,7 +590,7 @@ function renderThread(messages) {
 }
 
 async function loadConversations() {
-  const response = await fetch("/sarbi_rohek/api/messages/conversations");
+  const response = await fetch(apiPath("/sarbi_rohek/api/messages/conversations"));
   if (!response.ok) {
     renderConversations([]);
     return;
@@ -646,7 +662,7 @@ function commanderFromConversation() {
     return;
   }
 
-  fetch("/sarbi_rohek/api/orders/create", {
+  fetch(apiPath("/sarbi_rohek/api/orders/create"), {
     method: "POST",
     credentials: "include",
     headers: {
@@ -672,14 +688,14 @@ function commanderFromConversation() {
 
 async function loadProviders() {
   setStatus("Chargement des prestataires...");
-  let response = await fetch("/sarbi_rohek/api/providers/all");
+  let response = await fetch(apiPath("/sarbi_rohek/api/providers/all"));
   let data = [];
 
   if (response.ok) {
     data = await response.json();
   } else {
     // Temporary fallback while backend is redeployed.
-    response = await fetch("/sarbi_rohek/api/providers/featured");
+    response = await fetch(apiPath("/sarbi_rohek/api/providers/featured"));
     if (response.ok) {
       data = await response.json();
     } else {
@@ -699,7 +715,7 @@ async function loadFavorites() {
     return;
   }
 
-  const response = await fetch("/sarbi_rohek/api/favorites");
+  const response = await fetch(apiPath("/sarbi_rohek/api/favorites"));
   if (!response.ok) {
     favoritesListEl.innerHTML = "<p>Aucun favori.</p>";
     favoritesSet = new Set();
@@ -765,7 +781,7 @@ async function createPayment(providerEmail) {
   body.set("amount", String(amount));
   body.set("currency", "TND");
 
-  const response = await fetch("/sarbi_rohek/api/commerce/payments/create", {
+  const response = await fetch(apiPath("/sarbi_rohek/api/commerce/payments/create"), {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: body.toString()
@@ -787,7 +803,7 @@ async function loadPayments() {
     return;
   }
 
-  const response = await fetch("/sarbi_rohek/api/commerce/payments");
+  const response = await fetch(apiPath("/sarbi_rohek/api/commerce/payments"));
   if (!response.ok) {
     paymentsListEl.innerHTML = "<p>Aucun paiement.</p>";
     return;
@@ -814,7 +830,7 @@ async function loadNotifications() {
     return;
   }
 
-  const response = await fetch("/sarbi_rohek/api/notifications");
+  const response = await fetch(apiPath("/sarbi_rohek/api/notifications"));
   if (!response.ok) {
     notificationsListEl.innerHTML = "<p>Aucune notification.</p>";
     return;
@@ -839,7 +855,7 @@ async function loadNotifications() {
 }
 
 async function loadClientDashboard() {
-  const response = await fetch("/sarbi_rohek/api/dashboard/client");
+  const response = await fetch(apiPath("/sarbi_rohek/api/dashboard/client"));
   if (!response.ok) {
     return;
   }
@@ -867,7 +883,7 @@ async function submitReview(event) {
   body.set("rating", reviewRatingEl.value.trim());
   body.set("comment", reviewCommentEl ? reviewCommentEl.value.trim() : "");
 
-  const response = await fetch("/sarbi_rohek/api/reviews", {
+  const response = await fetch(apiPath("/sarbi_rohek/api/reviews"), {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: body.toString()
@@ -884,7 +900,7 @@ async function submitReview(event) {
 
 async function logoutClient() {
   try {
-    await fetch("/sarbi_rohek/api/auth/logout", { method: "POST" });
+    await fetch(apiPath("/sarbi_rohek/api/auth/logout"), { method: "POST" });
   } finally {
     window.location.href = "/sarbi_rohek/login.html";
   }
@@ -1030,7 +1046,7 @@ function loadProvidersForOrderSelection() {
   const select = document.getElementById("orderProviderSelect");
   if (!select) return;
   
-  fetch("/sarbi_rohek/api/providers/all", {
+  fetch(apiPath("/sarbi_rohek/api/providers/all"), {
     method: "GET",
     credentials: "include"
   })
@@ -1054,7 +1070,7 @@ function viewOrderDetail(orderId) {
 function payOrder(orderId) {
   if (!confirm("Confirmer le paiement de cette commande?")) return;
   
-  fetch("/sarbi_rohek/api/orders/pay", {
+  fetch(apiPath("/sarbi_rohek/api/orders/pay"), {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -1085,7 +1101,7 @@ if (createOrderFormEl) {
       return;
     }
 
-    fetch("/sarbi_rohek/api/orders/create", {
+    fetch(apiPath("/sarbi_rohek/api/orders/create"), {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -1237,7 +1253,7 @@ if (threadFormEl) {
     body.set("recipientEmail", selectedConversationEmail);
     body.set("message", message);
 
-    const response = await fetch("/sarbi_rohek/api/messages/send", {
+    const response = await fetch(apiPath("/sarbi_rohek/api/messages/send"), {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: body.toString()

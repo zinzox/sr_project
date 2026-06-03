@@ -19,6 +19,21 @@ function esc(value) {
     .replaceAll('"', "&quot;");
 }
 
+function apiBase() {
+  return (window.NEXT_PUBLIC_API_URL || 'https://ton-backend.onrender.com').replace(/\/$/, '');
+}
+
+function apiPath(path) {
+  if (!path) return apiBase();
+  if (path.startsWith('/sarbi_rohek/api')) {
+    return apiBase() + path.replace(/^\/sarbi_rohek/, '');
+  }
+  if (path.startsWith('/api')) {
+    return apiBase() + path;
+  }
+  return path;
+}
+
 function buildReviews(provider) {
   const tag = (provider.serviceType || "PROVIDER").toUpperCase();
   if (tag === "VIDEO_MAKER") {
@@ -124,7 +139,7 @@ function updateNavAuth() {
 
 async function fetchNameFromDatabase() {
   try {
-    const response = await fetch("/sarbi_rohek/api/auth/profile");
+    const response = await fetch(apiPath("/sarbi_rohek/api/auth/profile"));
     if (!response.ok) {
       return;
     }
@@ -141,7 +156,7 @@ async function fetchNameFromDatabase() {
 
 async function logoutClient() {
   try {
-    await fetch("/sarbi_rohek/api/auth/logout", { method: "POST" });
+    await fetch(apiPath("/sarbi_rohek/api/auth/logout"), { method: "POST" });
   } finally {
     window.location.href = "/sarbi_rohek/login.html";
   }
@@ -149,7 +164,7 @@ async function logoutClient() {
 
 async function loadAuthStatus() {
   try {
-    const response = await fetch("/sarbi_rohek/api/auth/status");
+    const response = await fetch(apiPath("/sarbi_rohek/api/auth/status"));
     if (!response.ok) {
       window.location.href = "/sarbi_rohek/login.html";
       return;

@@ -6,6 +6,10 @@ function containsBlacklistMessage(message) {
   return (message || "").toLowerCase().includes("blacklist");
 }
 
+function apiBase() {
+  return (window.NEXT_PUBLIC_API_URL || 'https://ton-backend.onrender.com').replace(/\/$/, '');
+}
+
 function renderFlash(message, kind) {
   if (!flash) {
     return;
@@ -29,7 +33,7 @@ function renderFlash(message, kind) {
 
 async function loadAuthStatus() {
   try {
-    const response = await fetch("/sarbi_rohek/api/auth/status");
+    const response = await fetch(apiBase() + "/api/auth/status");
     if (!response.ok) {
       return;
     }
@@ -77,7 +81,7 @@ function fixLoginAction() {
     return;
   }
 
-  loginForm.action = `${window.location.origin}/sarbi_rohek/api/login`;
+  loginForm.action = apiBase() + "/api/login";
 }
 
 showMessageFromQuery();
