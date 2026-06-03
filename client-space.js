@@ -2,6 +2,25 @@ function byId(id) {
   return document.getElementById(id);
 }
 
+// Login helper using configured backend URL (falls back to provided backend)
+async function login(email, password) {
+  const base = (typeof NEXT_PUBLIC_API_URL !== 'undefined' && NEXT_PUBLIC_API_URL) || window.NEXT_PUBLIC_API_URL || 'https://ton-backend.onrender.com';
+  const url = `${base.replace(/\/$/, '')}/api/auth/login`;
+
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`Login failed: ${res.status} ${text}`);
+  }
+
+  return res.json();
+}
+
 const helloNameEl = byId("clientHelloName");
 const logoutBtnEl = byId("clientLogoutBtn");
 const openMessagesBtnEl = byId("openMessagesBtn");
