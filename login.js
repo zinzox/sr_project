@@ -33,7 +33,7 @@ function renderFlash(message, kind) {
 
 async function loadAuthStatus() {
   try {
-    const response = await fetch(apiBase() + "/api/auth/status");
+    const response = await fetch(apiBase() + "/api/auth/status", { credentials: 'include' });
     if (!response.ok) {
       return;
     }
@@ -101,6 +101,7 @@ if (loginForm) {
       const res = await fetch(apiBase() + '/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
 

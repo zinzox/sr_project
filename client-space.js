@@ -484,7 +484,7 @@ function fillServiceTypeFilter() {
 }
 
 async function loadClientSession() {
-  const response = await fetch(apiPath("/sarbi_rohek/api/auth/status"));
+  const response = await fetch(apiPath("/sarbi_rohek/api/auth/status"), { credentials: "include" });
   if (!response.ok) {
     redirectToLoginWithReason("");
     return null;
@@ -507,7 +507,7 @@ async function loadClientSession() {
 function startSessionGuard() {
   window.setInterval(async () => {
     try {
-      const response = await fetch(apiPath("/sarbi_rohek/api/auth/status"), { cache: "no-store" });
+      const response = await fetch(apiPath("/sarbi_rohek/api/auth/status"), { cache: "no-store", credentials: "include" });
       if (!response.ok) {
         redirectToLoginWithReason("");
         return;
@@ -528,7 +528,7 @@ async function loadClientName(sessionData) {
   let lastName = (sessionData.lastName || "").trim();
 
   if (!firstName && !lastName) {
-    const profileResponse = await fetch(apiPath("/sarbi_rohek/api/auth/profile"));
+    const profileResponse = await fetch(apiPath("/sarbi_rohek/api/auth/profile"), { credentials: "include" });
     if (profileResponse.ok) {
       const profile = await profileResponse.json();
       firstName = (profile.firstName || "").trim();
@@ -900,7 +900,7 @@ async function submitReview(event) {
 
 async function logoutClient() {
   try {
-    await fetch(apiPath("/sarbi_rohek/api/auth/logout"), { method: "POST" });
+    await fetch(apiPath("/sarbi_rohek/api/auth/logout"), { method: "POST", credentials: "include" });
   } finally {
     window.location.href = "/sarbi_rohek/login.html";
   }
