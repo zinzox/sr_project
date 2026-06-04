@@ -7,7 +7,7 @@ function containsBlacklistMessage(message) {
 }
 
 function apiBase() {
-  return (window.NEXT_PUBLIC_API_URL || 'https://tonbackend.onrender.com').replace(/\/$/, '');
+  return "";
 }
 
 function renderFlash(message, kind) {
@@ -81,7 +81,7 @@ function fixLoginAction() {
     return;
   }
 
-  loginForm.action = apiBase() + "/api/login";
+  loginForm.action = "/api/auth/login";
 }
 
 // Intercept form submit and use JSON POST to backend auth endpoint
@@ -98,7 +98,7 @@ if (loginForm) {
     }
 
     try {
-      const res = await fetch(apiBase() + '/api/auth/login', {
+      const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -115,11 +115,11 @@ if (loginForm) {
       // Redirect based on role or to client-space by default
       const role = (data.role || '').trim().toUpperCase();
       if (role === 'PROVIDER') {
-        window.location.href = '/sarbi_rohek/provider-space.html';
+        window.location.href = '/provider-space.html';
         return;
       }
 
-      window.location.href = '/sarbi_rohek/client-space.html';
+      window.location.href = '/client-space.html';
     } catch (err) {
       renderFlash(String(err.message || err), 'error');
     }

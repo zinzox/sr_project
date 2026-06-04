@@ -82,7 +82,7 @@ function fixRegisterAction() {
     return;
   }
 
-  registerForm.action = `${window.location.origin}/sarbi_rohek/api/register`;
+  registerForm.action = "/api/auth/register";
 }
 
 function setVerificationMode(enabled) {
@@ -128,6 +128,7 @@ async function submitRegister(event) {
   try {
     response = await fetch(registerForm.action, {
       method: "POST",
+      credentials: "include",
       body: new URLSearchParams(formData)
     });
   } catch (error) {
@@ -182,7 +183,7 @@ async function submitRegister(event) {
 
 async function loadAuthStatus() {
   try {
-    const response = await fetch("/sarbi_rohek/api/auth/status");
+    const response = await fetch("/api/auth/status", { credentials: "include" });
     if (!response.ok) {
       return;
     }
@@ -196,11 +197,11 @@ async function loadAuthStatus() {
 
     const role = (data.role || "").trim();
     if (role === "PROVIDER") {
-      window.location.href = "/sarbi_rohek/provider-space.html";
+      window.location.href = "/provider-space.html";
       return;
     }
 
-    window.location.href = "/sarbi_rohek/client-space.html";
+    window.location.href = "/client-space.html";
   } catch (error) {
     // No active session, stay on register page.
   }
