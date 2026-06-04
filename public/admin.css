@@ -1,0 +1,236 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Sora", "Segoe UI", Tahoma, sans-serif;
+  background:
+    radial-gradient(circle at 15% -10%, #dff1ff 0, transparent 35%),
+    radial-gradient(circle at 110% 110%, #eafbe7 0, transparent 30%),
+    linear-gradient(120deg, #eef7ff, #f7f4ff);
+  color: #1b2430;
+}
+
+.admin-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.admin-head {
+  background: #ffffff;
+  border: 1px solid #dbe6f4;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 14px 30px rgba(16, 60, 95, 0.12);
+  margin-bottom: 16px;
+}
+
+.admin-head h1 {
+  margin: 0 0 8px;
+  letter-spacing: 0.2px;
+}
+
+.status {
+  margin: 10px 0 0;
+  font-weight: 600;
+  color: #0b5c85;
+}
+
+.admin-filters {
+  background: #ffffff;
+  border: 1px solid #dbe6f4;
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 14px 28px rgba(16, 60, 95, 0.08);
+  margin-bottom: 14px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.admin-filters label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.admin-filters select,
+.admin-filters input {
+  border: 1px solid #cdddf3;
+  border-radius: 10px;
+  padding: 8px;
+  font: inherit;
+}
+
+.admin-filters select:focus,
+.admin-filters input:focus,
+.moderation-filters select:focus,
+.moderation-filters input:focus {
+  outline: none;
+  border-color: #7fb6ea;
+  box-shadow: 0 0 0 3px rgba(11, 92, 133, 0.2);
+}
+
+.admin-table-wrap {
+  background: #ffffff;
+  border: 1px solid #dbe6f4;
+  border-radius: 18px;
+  overflow: auto;
+  box-shadow: 0 14px 28px rgba(16, 60, 95, 0.08);
+  margin-top: 14px;
+}
+
+.moderation-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(160px, 1fr));
+  gap: 10px;
+  padding: 12px;
+}
+
+.kpi-card {
+  border: 1px solid #dbe6f4;
+  border-radius: 12px;
+  padding: 10px;
+  background: linear-gradient(180deg, #fbfdff, #f1f7ff);
+}
+
+.kpi-card p {
+  margin: 0;
+  font-size: 12px;
+  color: #37516b;
+}
+
+.kpi-card strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 24px;
+  color: #103c5f;
+}
+
+.moderation-filters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  gap: 10px;
+  padding: 0 12px 12px;
+}
+
+.moderation-filters label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.moderation-filters select,
+.moderation-filters input,
+.moderation-filters button {
+  border: 1px solid #cdddf3;
+  border-radius: 8px;
+  padding: 8px;
+  font: inherit;
+}
+
+.moderation-filters button {
+  align-self: end;
+  background: linear-gradient(180deg, #0d6d9d, #0b5c85);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.moderation-filters button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(11, 92, 133, 0.25);
+}
+
+.admin-subtitle {
+  margin: 12px 12px 0;
+  font-size: 16px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.admin-table th,
+.admin-table td {
+  border-bottom: 1px solid #edf1f6;
+  padding: 12px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.admin-table th {
+  background: #f7faff;
+}
+
+.admin-table tbody tr:hover {
+  background: #f7fbff;
+}
+
+.btn-delete {
+  background: #d7263d;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.btn-delete:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(215, 38, 61, 0.25);
+}
+
+.btn-mod {
+  border: none;
+  border-radius: 10px;
+  padding: 6px 8px;
+  margin: 2px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: transform 0.14s ease;
+}
+
+.btn-mod:hover {
+  transform: translateY(-1px);
+}
+
+.btn-blacklist {
+  background: #53131c;
+  color: #fff;
+}
+
+.btn-ban {
+  background: #8a4b02;
+  color: #fff;
+}
+
+.btn-warn {
+  background: #0b5c85;
+  color: #fff;
+}
+
+.btn-resolve,
+.btn-unblacklist {
+  background: #0f7a2f;
+  color: #fff;
+}
+
+@media (max-width: 920px) {
+  .admin-filters {
+    grid-template-columns: repeat(2, minmax(160px, 1fr));
+  }
+
+  .moderation-kpis,
+  .moderation-filters {
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+  }
+}

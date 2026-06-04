@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Accès aux Fonctionnalités — Sarbi Rohek</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,02);
+      max-width: 800px;
+      padding: 40px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .header h1 {
+      color: #667eea;
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    
+    .header p {
+      color: #666;
+      font-size: 1em;
+    }
+    
+    .section {
+      margin-bottom: 40px;
+    }
+    
+    .section h2 {
+      color: #667eea;
+      margin-bottom: 20px;
+      font-size: 1.5em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .step {
+      background: #f5f5f5;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      border-left: 4px solid #667eea;
+    }
+    
+    .step strong {
+      color: #667eea;
+      display: block;
+      margin-bottom: 5px;
+    }
+    
+    .step p {
+      color: #555;
+      line-height: 1.6;
+    }
+    
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin: 30px 0;
+    }
+    
+    .btn {
+      padding: 15px 25px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1em;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-secondary {
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+    
+    .btn-secondary:hover {
+      background: #f5f5f5;
+    }
+    
+    .highlight {
+      background: #fff3cd;
+      border-left: 4px solid #ff9800;
+      padding: 20px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+    
+    .highlight strong {
+      color: #f57c00;
+    }
+    
+    .success {
+      background: #e8f5e9;
+      border-left: 4px solid #4caf50;
+      padding: 20px;
+      border-radius: 4px;
+      margin: 20px 0;
+      color: #2e7d32;
+    }
+    
+    @media (max-width: 600px) {
+      .buttons {
+        grid-template-columns: 1fr;
+      }
+      .container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>🎯 Sarbi Rohek</h1>
+      <p>Guide Complet d'Accès aux Fonctionnalités</p>
+    </header>
+
+    <div class="success">
+      ✅ <strong>Bonne nouvelle :</strong> Toutes les fonctionnalités de l'application sont disponibles !
+      Il n'y a rien de vide — vous devez simplement vous connecter pour accéder aux données.
+    </div>
+
+    <section class="section">
+      <h2>🔐 Étape 1 : Authentification (OBLIGATOIRE)</h2>
+      <p>Pour accéder à toutes les fonctionnalités, vous devez d'abord vous connecter.</p>
+      
+      <div class="step">
+        <strong>Option A : Créer un nouveau compte</strong>
+        <p>Si vous n'avez pas encore de compte, créez-en un en cliquant sur "S'inscrire".</p>
+      </div>
+      
+      <div class="step">
+        <strong>Option B : Utiliser un compte existant</strong>
+        <p>Si vous avez un compte, connectez-vous avec vos identifiants.</p>
+      </div>
+
+      <div class="buttons">
+        <a href="register.html" class="btn btn-primary">📝 S'inscrire Maintenant</a>
+        <a href="login.html" class="btn btn-secondary">🔐 Se Connecter</a>
+      </div>
+
+      <div class="highlight">
+        <strong>⚠️ Importante :</strong> Vous DEVEZ être connecté pour voir les données. Après la connexion, 
+        toutes les fonctionnalités seront disponibles dans votre espace personnel.
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>👤 Étape 2 : Accéder à votre Espace</h2>
+      <p>Après la connexion, vous serez redirigé automatiquement vers :</p>
+      
+      <div class="step">
+        <strong>Pour les CLIENTS</strong>
+        <p>Vous accédez à <strong>Espace Client</strong> avec :</p>
+        <ul style="margin-left: 20px; margin-top: 10px;">
+          <li>📖 Répertoire de tous les prestataires</li>
+          <li>📋 Gestion des demandes de devis</li>
+          <li>📦 Historique de vos commandes</li>
+          <li>💬 Messagerie avec les prestataires</li>
+          <li>📊 Votre tableau de bord personnel</li>
+          <li>❤️ Vos prestataires préférés</li>
+          <li>💳 Historique des paiements</li>
+        </ul>
+      </div>
+      
+      <div class="step">
+        <strong>Pour les PRESTATAIRES</strong>
+        <p>Vous accédez à <strong>Espace Prestataire</strong> avec :</p>
+        <ul style="margin-left: 20px; margin-top: 10px;">
+          <li>👤 Gestion de votre profil</li>
+          <li>🎨 Votre portfolio et certifications</li>
+          <li>📅 Vos créneaux de disponibilité</li>
+          <li>💬 Messages reçus des clients</li>
+          <li>📊 Votre tableau de bord de performance</li>
+          <li>⏸️ Option de mise en pause</li>
+          <li>📝 Tâches à remplir</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>✨ Étape 3 : Explorez les Fonctionnalités</h2>
+      <p>Une fois connecté, vous verrez différents <strong>onglets</strong> (tabs) en haut de votre espace :</p>
+      
+      <div style="display: grid; gap: 10px;">
+        <div class="step">
+          <strong>Cliquez sur chaque onglet</strong>
+          <p>Les données se chargeront automatiquement depuis la base de données.</p>
+        </div>
+        
+        <div class="step">
+          <strong>Vous verrez des données RÉELLES</strong>
+          <p>Pas de données fictives — ce sont vos vraies données de la base de données.</p>
+        </div>
+        
+        <div class="step">
+          <strong>Aucune action supplémentaire requise</strong>
+          <p>L'application charge et affiche automatiquement vos informations.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>❓ Pourquoi je ne vois pas de données ?</h2>
+      
+      <div class="step">
+        <strong>Raison #1 : Vous n'êtes pas connecté</strong>
+        <p>➜ Solution : Connectez-vous d'abord sur <a href="login.html">la page de connexion</a></p>
+      </div>
+      
+      <div class="step">
+        <strong>Raison #2 : Il n'y a pas encore de données pour vous</strong>
+        <p>➜ Solution : Les données s'affichent au fur et à mesure que vous les créez (devis, commandes, etc.)</p>
+      </div>
+      
+      <div class="step">
+        <strong>Raison #3 : Pages autonomes (quotes.html, orders.html, etc.)</strong>
+        <p>➜ Solution : Ces pages <strong>EXISTENT MAIS NE SONT PAS ACCESSIBLES DIRECTEMENT</strong>. 
+        Les fonctionnalités sont intégrées dans <strong>client-space.html</strong> sous forme d'onglets. 
+        Connectez-vous et cliquez sur l'onglet correspondant.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>🧪 Comptes de Test</h2>
+      <p>Vous pouvez tester avec ces comptes pré-existants :</p>
+      
+      <div class="step">
+        <strong>Compte Client de Test</strong>
+        <br><code style="background: #f5f5f5; padding: 5px 10px; border-radius: 4px;">
+          Email: test@example.com<br>Mot de passe: password
+        </code>
+      </div>
+      
+      <div class="step">
+        <strong>Compte Prestataire de Test</strong>
+        <br><code style="background: #f5f5f5; padding: 5px 10px; border-radius: 4px;">
+          Email: fatma@gmail.com<br>Mot de passe: password
+        </code>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>🚀 Prêt à Commencer ?</h2>
+      <p>Voici les étapes rapides :</p>
+      <ol style="margin-left: 20px; color: #555; line-height: 2;">
+        <li>Cliquez sur <strong>"Se Connecter"</strong> ci-dessous</li>
+        <li>Utilisez vos identifiants (ou les comptes de test)</li>
+        <li>Explorez les onglets dans votre espace</li>
+        <li>Les données se chargeront automatiquement</li>
+        <li>Profitez ! 🎉</li>
+      </ol>
+
+      <div class="buttons" style="margin-top: 40px;">
+        <a href="login.html" class="btn btn-primary">🔐 Se Connecter</a>
+        <a href="guide.html" class="btn btn-secondary">📖 Guide Complet</a>
+      </div>
+    </section>
+
+    <div class="success" style="margin-top: 40px;">
+      ✨ <strong>Important :</strong> Toutes les APIs sont connectées et fonctionnelles. 
+      L'application charge les données réelles depuis MySQL. 
+      Il n'y a rien de vide — connectez-vous pour voir les données !
+    </div>
+  </div>
+</body>
+</html>

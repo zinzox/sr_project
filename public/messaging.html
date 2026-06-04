@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Messagerie — Sarbi Rohek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Poppins, sans-serif; background: #f5f5f5; }
+    
+    .messaging-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; background: white; }
+    
+    .sidebar { border-right: 1px solid #ddd; display: flex; flex-direction: column; }
+    .sidebar-header { padding: 20px; border-bottom: 1px solid #ddd; }
+    .sidebar-header h3 { font-size: 1.1em; margin-bottom: 10px; }
+    .search-box { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 20px; font-size: 0.9em; font-family: Poppins, sans-serif; }
+    .conversations { flex: 1; overflow-y: auto; }
+    
+    .conversation-item { padding: 12px 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background 0.2s; }
+    .conversation-item:hover { background: #f9f9f9; }
+    .conversation-item.active { background: #f0f0f0; border-left: 4px solid #667eea; }
+    .conversation-name { font-weight: 600; margin-bottom: 3px; }
+    .conversation-preview { font-size: 0.85em; color: #999; }
+    .unread-badge { display: inline-block; background: #667eea; color: white; padding: 2px 6px; border-radius: 10px; font-size: 0.75em; }
+    
+    .main-panel { display: flex; flex-direction: column; }
+    .thread-header { padding: 20px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; }
+    .thread-title { font-weight: 600; }
+    .thread-status { font-size: 0.85em; color: #999; }
+    
+    .messages-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+    .message { display: flex; gap: 10px; margin-bottom: 15px; }
+    .message.own { justify-content: flex-end; }
+    .avatar { width: 35px; height: 35px; border-radius: 50%; background: #667eea; color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+    .message-bubble { max-width: 60%; padding: 12px 15px; border-radius: 12px; background: #f0f0f0; }
+    .message.own .message-bubble { background: #667eea; color: white; }
+    .message-time { font-size: 0.75em; color: #999; margin-top: 3px; }
+    .message.own .message-time { color: #white; opacity: 0.7; }
+    
+    .input-area { padding: 20px; border-top: 1px solid #ddd; display: flex; gap: 10px; }
+    .message-input { flex: 1; padding: 12px 15px; border: 1px solid #ddd; border-radius: 20px; font-family: Poppins, sans-serif; font-size: 0.95em; }
+    .btn-send { background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; }
+    .btn-send:hover { background: #5568d3; }
+    .btn-send:disabled { background: #ccc; cursor: not-allowed; }
+    
+    .no-selection { display: flex; align-items: center; justify-content: center; height: 100%; color: #999; }
+    
+    .action-buttons { display: flex; gap: 10px; }
+    .action-btn { background: none; border: none; font-size: 1.2em; cursor: pointer; padding: 5px; }
+    
+    @media (max-width: 768px) {
+      .messaging-container { grid-template-columns: 1fr; }
+      .sidebar { position: absolute; left: 0; top: 0; width: 280px; height: 100%; z-index: 10; background: white; }
+      .message-bubble { max-width: 80%; }
+    }
+    
+    .typing-indicator { display: flex; gap: 4px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; animation: bounce 1.4s infinite; }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%, 80%, 100% { transform: scale(1); } 40% { transform: scale(1.3); } }
+  </style>
+</head>
+<body>
+  <div class="messaging-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h3>Messages</h3>
+        <input type="text" class="search-box" placeholder="Rechercher..." />
+      </div>
+      <div class="conversations" id="conversationsList">
+        <!-- Conversations seront chargées ici -->
+      </div>
+    </aside>
+
+    <!-- MAIN CHAT AREA -->
+    <main class="main-panel">
+      <div class="thread-header">
+        <div>
+          <div class="thread-title" id="threadTitle">Sélectionnez une conversation</div>
+          <div class="thread-status" id="threadStatus"></div>
+        </div>
+        <div class="action-buttons">
+          <button class="action-btn" title="Info" onclick="alert('Informations du contact')">ℹ️</button>
+          <button class="action-btn" title="Appel" onclick="alert('Appel à implémenter')">📞</button>
+          <button class="action-btn" title="Plus" onclick="alert('Menu')">⋮</button>
+        </div>
+      </div>
+
+      <div id="messagesArea" class="messages-area">
+        <div class="no-selection">Sélectionnez une conversation pour commencer</div>
+      </div>
+
+      <div class="input-area">
+        <input type="text" id="messageInput" class="message-input" placeholder="Votre message..." />
+        <button id="sendBtn" class="btn-send" onclick="sendMessage()">Envoyer</button>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const mockConversations = [
+      {
+        id: 1,
+        name: "Fatma Barouni",
+        avatar: "F",
+        lastMessage: "D'accord, à bientôt!",
+        timestamp: "Aujourd'hui 14:30",
+        unread: 2,
+        messages: [
+          { sender: "Fatma", text: "Bonjour, tu as vu mon portfolio?", time: "10:00" },
+          { sender: "me", text: "Oui, c'est super! Quand peux-tu commencer?", time: "10:15" },
+          { sender: "Fatma", text: "Demain à 14h?", time: "10:20" },
+          { sender: "me", text: "Parfait, ça me convient!", time: "10:25" },
+          { sender: "Fatma", text: "D'accord, à bientôt!", time: "14:30" }
+        ]
+      },
+      {
+        id: 2,
+        name: "Dorra Mharouech",
+        avatar: "D",
+        lastMessage: "Le site est presque fini",
+        timestamp: "Hier",
+        unread: 1,
+        messages: [
+          { sender: "Dorra", text: "Salut! J'ai commencé le dev.", time: "Hier 09:00" },
+          { sender: "me", text: "Cool! Montre-moi une prévisualisation", time: "Hier 10:00" },
+          { sender: "Dorra", text: "Le site est presque fini", time: "Hier 16:00" }
+        ]
+      },
+      {
+        id: 3,
+        name: "Support Sarbi Rohek",
+        avatar: "S",
+        lastMessage: "Votre problème a été résolu",
+        timestamp: "22/03",
+        unread: 0,
+        messages: [
+          { sender: "Support", text: "Bonjour, comment puis-je vous aider?", time: "22/03 10:00" },
+          { sender: "me", text: "J'ai un problème avec ma facture", time: "22/03 10:15" },
+          { sender: "Support", text: "Votre problème a été résolu", time: "22/03 11:00" }
+        ]
+      }
+    ];
+
+    let selectedConversationId = null;
+    let currentUserRole = "CLIENT";
+
+    function loadConversations() {
+      const list = document.getElementById("conversationsList");
+      list.innerHTML = mockConversations.map(conv => `
+        <div class="conversation-item" onclick="selectConversation(${conv.id})">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="conversation-name">${conv.name}</span>
+            ${conv.unread > 0 ? `<span class="unread-badge">${conv.unread}</span>` : ""}
+          </div>
+          <div class="conversation-preview">${conv.lastMessage}</div>
+          <small style="color: #ccc;">${conv.timestamp}</small>
+        </div>
+      `).join("");
+    }
+
+    function selectConversation(convId) {
+      selectedConversationId = convId;
+      document.querySelectorAll(".conversation-item").forEach(el => el.classList.remove("active"));
+      event.target.closest(".conversation-item").classList.add("active");
+
+      const conv = mockConversations.find(c => c.id === convId);
+      document.getElementById("threadTitle").textContent = conv.name;
+      document.getElementById("threadStatus").textContent = "En ligne";
+
+      loadMessages(conv);
+    }
+
+    function loadMessages(conv) {
+      const area = document.getElementById("messagesArea");
+      area.innerHTML = "";
+
+      conv.messages.forEach(msg => {
+        const isOwn = msg.sender === "me";
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `message ${isOwn ? "own" : ""}`;
+
+        const avatar = isOwn ? "" : `<div class="avatar">${conv.avatar}</div>`;
+        const bubble = `
+          <div style="display: flex; flex-direction: column; ${isOwn ? "align-items: flex-end" : ""};
+          ">
+            <div class="message-bubble">${msg.text}</div>
+            <div class="message-time">${msg.time}</div>
+          </div>
+        `;
+
+        messageDiv.innerHTML = avatar + bubble;
+        area.appendChild(messageDiv);
+      });
+
+      area.scrollTop = area.scrollHeight;
+    }
+
+    function sendMessage() {
+      const input = document.getElementById("messageInput");
+      const text = input.value.trim();
+
+      if (!text || !selectedConversationId) return;
+
+      const conv = mockConversations.find(c => c.id === selectedConversationId);
+      const now = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+      conv.messages.push({ sender: "me", text, time: now });
+      conv.lastMessage = text;
+
+      loadMessages(conv);
+      input.value = "";
+      input.focus();
+
+      // Simuler une réponse après 1s
+      setTimeout(() => {
+        const responses = [
+          "Got it! ✓",
+          "Merci pour le message!",
+          "C'est noté!",
+          "Je vais vérifier ça",
+          "D'accord 👍"
+        ];
+        const response = responses[Math.floor(Math.random() * responses.length)];
+        conv.messages.push({ sender: conv.name, text: response, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) });
+        loadMessages(conv);
+      }, 1000);
+    }
+
+    document.getElementById("messageInput").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+
+    loadConversations();
+  </script>
+  <script src="chatbot-widget.js"></script>
+</body>
+</html>

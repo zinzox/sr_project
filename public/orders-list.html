@@ -1,0 +1,27 @@
+<div id="ordersView" data-client-view="orders" style="display:none;">
+  <div class="view-header">
+    <h2>Mes commandes</h2>
+    <div id="ordersStatus" class="status-message"></div>
+  </div>
+
+  <div class="orders-container">
+    <div id="ordersList" class="list-group"></div>
+  </div>
+
+  <!-- Modal: Créer une nouvelle commande -->
+  <div id="createOrderModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close" onclick="closeCreateOrderModal()">&times;</span>
+      <h3>Demander une commande</h3>
+      <form id="createOrderForm">
+        <div class="form-group">
+          <label for="orderProviderSelect">Choisir un prestataire:</label>
+          <select id="orderProviderSelect" required>
+            <option value="">-- Sélectionner un prestataire --</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Créer la demande</button>
+      </form>
+    </div>
+  </div>
+</div>

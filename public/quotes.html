@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mes Devis — Sarbi Rohek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="client-space.css" />
+  <style>
+    .quotes-page { padding: 20px; }
+    .quote-form { background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+    .quote-form label { display: block; margin-bottom: 15px; }
+    .quote-form input, .quote-form select, .quote-form textarea { 
+      width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; 
+      font-family: Poppins, sans-serif;
+    }
+    .quote-form textarea { resize: vertical; min-height: 100px; }
+    .quotes-list { display: grid; gap: 15px; }
+    .quote-card {
+      background: white; border: 1px solid #ddd; border-radius: 8px; padding: 15px;
+    }
+    .quote-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .quote-status { 
+      font-weight: 600; padding: 4px 8px; border-radius: 4px; font-size: 0.85em;
+    }
+    .status-pending { background: #fff3cd; color: #856404; }
+    .status-accepted { background: #d4edda; color: #155724; }
+    .status-rejected { background: #f8d7da; color: #721c24; }
+    .quote-details { margin: 10px 0; color: #666; font-size: 0.95em; }
+    .quote-actions { display: flex; gap: 10px; margin-top: 10px; }
+    .quote-actions .btn { font-size: 0.9em; padding: 8px 12px; }
+  </style>
+</head>
+<body>
+  <main class="quotes-page">
+    <header class="quotes-header">
+      <div>
+        <p class="kicker">Gestion des devis</p>
+        <h1>Demandes de devis</h1>
+        <p class="subtitle">Envoyez des demandes de devis à des prestataires et suivez vos demandes.</p>
+      </div>
+      <div class="top-actions">
+        <a class="btn ghost" href="client-space.html">Retour à l'espace client</a>
+      </div>
+    </header>
+
+    <section class="module-card">
+      <h2>Créer une nouvelle demande de devis</h2>
+      <form id="quoteRequestForm" class="quote-form">
+        <label>
+          Email du prestataire *
+          <input id="quoteProviderEmail" type="email" placeholder="provider@email.com" required />
+        </label>
+        <label>
+          Description du projet *
+          <textarea id="quoteDescription" placeholder="Décrivez votre projet en détail..." required></textarea>
+        </label>
+        <label>
+          Budget (en TND) *
+          <input id="quoteBudget" type="number" min="0" step="0.01" placeholder="0.00" required />
+        </label>
+        <label>
+          Délai souhaité (jours) *
+          <input id="quoteDeadline" type="number" min="1" placeholder="Nombre de jours" required />
+        </label>
+        <button class="btn primary" type="submit">Envoyer la demande</button>
+        <p id="quoteFormStatus" class="module-status"></p>
+      </form>
+    </section>
+
+    <section class="module-card">
+      <h2>Mes demandes de devis</h2>
+      <p id="quotesListStatus" class="status">Chargement des devis...</p>
+      <div id="quotesList" class="quotes-list"></div>
+    </section>
+
+  </main>
+
+  <script>
+    const quoteRequestForm = document.getElementById("quoteRequestForm");
+    const quotesListEl = document.getElementById("quotesList");
+    const quotesListStatus = document.getElementById("quotesListStatus");
+    const quoteFormStatus = document.getElementById("quoteFormStatus");
+
+    let currentUserEmail = "";
+
+    async function loadCurrentUser() {
+      try {
+        const response = await fetch("/sarbi_rohek/api/auth/status");
+        if (!response.ok) {
+          window.location.href = "/sarbi_rohek/login.html?error=Non%20autorisé";
+          return;
+        }
+        const data = await response.json();
+        if (!data.loggedIn) {
+          window.location.href = "/sarbi_rohek/login.html";
+          return;
+        }
+        currentUserEmail = data.email;
+      } catch (error) {
+        console.error("Erreur lors du chargement de l'utilisateur", error);
+      }
+    }
+
+    async function submitQuoteRequest(e) {
+      e.preventDefault();
+      const providerEmail = document.getElementById("quoteProviderEmail").value;
+      const description = document.getElementById("quoteDescription").value;
+      const budget = parseFloat(document.getElementById("quoteBudget").value);
+      const deadline = parseInt(document.getElementById("quoteDeadline").value);
+
+      try {
+        const response = await fetch("/sarbi_rohek/api/quotes/request", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            clientEmail: currentUserEmail,
+            providerEmail,
+            description,
+            budget,
+            deadlineAt: deadline
+          })
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          quoteFormStatus.className = "module-status is-success";
+          quoteFormStatus.textContent = "Demande de devis envoyée avec succès !";
+          quoteRequestForm.reset();
+          setTimeout(() => loadQuotes(), 1500);
+        } else {
+          quoteFormStatus.className = "module-status is-error";
+          quoteFormStatus.textContent = result.message || "Erreur lors de l'envoi";
+        }
+      } catch (error) {
+        quoteFormStatus.className = "module-status is-error";
+        quoteFormStatus.textContent = "Erreur réseau";
+      }
+    }
+
+    async function loadQuotes() {
+      try {
+        // Appel à l'API réelle
+        const response = await fetch(`/sarbi_rohek/api/quotes/list?clientEmail=${encodeURIComponent(currentUserEmail)}`);
+        if (!response.ok) {
+          quotesListStatus.textContent = "Erreur lors du chargement des devis";
+          return;
+        }
+
+        const quotes = await response.json();
+        quotesListEl.innerHTML = "";
+
+        if (!quotes || quotes.length === 0) {
+          quotesListStatus.textContent = "📋 Aucune demande de devis pour le moment. Créez-en une ci-dessus!";
+          return;
+        }
+
+        quotesListStatus.textContent = "";
+        quotes.forEach(quote => {
+          const status = (quote.status || "PENDING").toUpperCase();
+          const statusClass = `status-${status.toLowerCase().replace("_", "-")}`;
+          const card = document.createElement("div");
+          card.className = "quote-card";
+          
+          const createdDate = quote.createdAt ? new Date(quote.createdAt).toLocaleDateString('fr-FR') : 'N/A';
+          const budget = quote.budget || 0;
+          const deadline = quote.deadline || quote.deadlineAt || 'N/A';
+          
+          card.innerHTML = `
+            <div class="quote-header">
+              <div>
+                <strong>${quote.providerEmail || 'Prestataire'}</strong>
+                <em style="font-size: 0.9em; color: #999;">Créé: ${createdDate}</em>
+              </div>
+              <span class="quote-status ${statusClass}">${status}</span>
+            </div>
+            <div class="quote-details">
+              <p><strong>Description:</strong> ${quote.description || "N/A"}</p>
+              <p><strong>Budget:</strong> ${budget} TND</p>
+              <p><strong>Délai:</strong> ${deadline}</p>
+              ${quote.providerResponse ? `<p><strong>Réponse du prestataire:</strong> ${quote.providerResponse}</p>` : ""}
+              ${quote.updatedAt ? `<p style="font-size: 0.9em; color: #999;"><em>Dernière mise à jour: ${new Date(quote.updatedAt).toLocaleDateString('fr-FR')}</em></p>` : ""}
+            </div>
+            <div class="quote-actions">
+              <button class="btn ghost" onclick="alert('Détails du devis #' + ${quote.id})">Voir détails</button>
+              ${status === 'PENDING' ? `<button class="btn ghost" style="color: #f5576c;" onclick="cancelQuote(${quote.id || 0})">Annuler</button>` : ""}
+            </div>
+          `;
+          quotesListEl.appendChild(card);
+        });
+      } catch (error) {
+        console.error("Erreur lors du chargement des devis", error);
+        quotesListStatus.textContent = "❌ Erreur lors du chargement des devis";
+      }
+    }
+
+    function cancelQuote(quoteId) {
+      if (confirm("Êtes-vous sûr de vouloir annuler cette demande ?")) {
+        // Implémenter l'annulation via API
+        alert("Fonctionnalité à implémenter");
+      }
+    }
+
+    if (quoteRequestForm) {
+      quoteRequestForm.addEventListener("submit", submitQuoteRequest);
+    }
+
+    loadCurrentUser();
+    setTimeout(() => {
+      if (currentUserEmail) loadQuotes();
+    }, 500);
+  </script>
+  <script src="chatbot-widget.js"></script>
+</body>
+</html>

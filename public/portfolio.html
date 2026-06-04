@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio & Certifications — Sarbi Rohek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="provider-space.css" />
+  <style>
+    .portfolio-container { padding: 20px; }
+    .portfolio-tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid #ddd; }
+    .portfolio-tab { padding: 10px 15px; border-bottom: 3px solid transparent; cursor: pointer; }
+    .portfolio-tab.active { border-bottom-color: #667eea; color: #667eea; font-weight: 600; }
+    .portfolio-content { display: none; }
+    .portfolio-content.active { display: block; }
+    
+    /* Certifications */
+    .certifications-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .cert-card { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 20px; text-align: center; }
+    .cert-badge { font-size: 3em; margin-bottom: 10px; }
+    .cert-title { font-weight: 600; font-size: 1.1em; margin-bottom: 5px; }
+    .cert-issuer { color: #999; font-size: 0.9em; margin-bottom: 10px; }
+    .cert-date { color: #666; font-size: 0.85em; }
+    .cert-action { margin-top: 10px; }
+    
+    /* Portfolio d'œuvres */
+    .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
+    .portfolio-item { background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s; }
+    .portfolio-item:hover { transform: translateY(-5px); }
+    .portfolio-image { width: 100%; height: 200px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-size: 3em; }
+    .portfolio-info { padding: 15px; }
+    .portfolio-title { font-weight: 600; margin-bottom: 5px; }
+    .portfolio-desc { font-size: 0.9em; color: #666; }
+    
+    /* Formulaires */
+    .form-section { background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+    .form-section h3 { margin-top: 0; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+    .form-actions { display: flex; gap: 10px; }
+    .btn { padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-family: Poppins, sans-serif; }
+    .btn-primary { background: #667eea; color: white; }
+    .btn-primary:hover { background: #5568d3; }
+    .btn-secondary { background: #ddd; color: #333; }
+    .btn-secondary:hover { background: #ccc; }
+    .btn-danger { background: #f5576c; color: white; }
+    .status { padding: 10px; margin: 10px 0; border-radius: 4px; }
+    .status.success { background: #d4edda; color: #155724; }
+    .status.error { background: #f8d7da; color: #721c24; }
+  </style>
+</head>
+<body>
+  <main class="portfolio-container">
+    <header>
+      <div style="margin-bottom: 20px;">
+        <p class="kicker">Votre profil professionnel</p>
+        <h1>Portfolio & Certifications</h1>
+        <p class="subtitle">Showcasez vos compétences et obtenez des certifications vérifiées</p>
+      </div>
+      <a class="btn btn-secondary" href="provider-space.html">← Retour</a>
+    </header>
+
+    <!-- Tabs de navigation -->
+    <div class="portfolio-tabs">
+      <button class="portfolio-tab active" onclick="showTab('certifications')">🏆 Certifications</button>
+      <button class="portfolio-tab" onclick="showTab('portfolio')">🎨 Portfolio</button>
+      <button class="portfolio-tab" onclick="showTab('add-cert')">➕ Ajouter Certification</button>
+      <button class="portfolio-tab" onclick="showTab('add-work')">➕ Ajouter Œuvre</button>
+    </div>
+
+    <!-- CERTIFICATIONS -->
+    <div id="certifications" class="portfolio-content active">
+      <h2>Mes Certifications</h2>
+      <p id="certsStatus" class="status">Chargement des certifications...</p>
+      <div id="certsList" class="certifications-grid"></div>
+      <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 4px;">
+        <strong>💡 Conseil:</strong> Les certifications augmentent votre crédibilité. Ajoutez vos diplômes, formations et badges!
+      </div>
+    </div>
+
+    <!-- PORTFOLIO -->
+    <div id="portfolio" class="portfolio-content">
+      <h2>Mon Portfolio</h2>
+      <p id="portfolioStatus" class="status">Chargement du portfolio...</p>
+      <div id="portfolioList" class="portfolio-grid"></div>
+      <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 4px;">
+        <strong>💡 Conseil:</strong> Montrez vos meilleurs travaux pour attirer plus de clients!
+      </div>
+    </div>
+
+    <!-- AJOUTER CERTIFICATION -->
+    <div id="add-cert" class="portfolio-content">
+      <h2>Ajouter une Certification</h2>
+      <form id="addCertForm" class="form-section">
+        <div class="form-group">
+          <label>Titre de la certification *</label>
+          <input type="text" id="certTitle" placeholder="Ex: Certification Google Ads" required />
+        </div>
+        <div class="form-group">
+          <label>Organisme émetteur *</label>
+          <input type="text" id="certIssuer" placeholder="Ex: Google, Coursera, etc." required />
+        </div>
+        <div class="form-group">
+          <label>Date d'obtention *</label>
+          <input type="date" id="certDate" required />
+        </div>
+        <div class="form-group">
+          <label>URL de vérification</label>
+          <input type="url" id="certUrl" placeholder="https://..." />
+        </div>
+        <div class="form-group">
+          <label>Lien de l'image/badge</label>
+          <input type="url" id="certImage" placeholder="https://..." />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Ajouter la certification</button>
+        </div>
+        <p id="certFormStatus"></p>
+      </form>
+    </div>
+
+    <!-- AJOUTER ŒUVRE -->
+    <div id="add-work" class="portfolio-content">
+      <h2>Ajouter une Œuvre au Portfolio</h2>
+      <form id="addWorkForm" class="form-section">
+        <div class="form-group">
+          <label>Titre du projet *</label>
+          <input type="text" id="workTitle" placeholder="Ex: Montage vidéo - Pub Nike" required />
+        </div>
+        <div class="form-group">
+          <label>Description *</label>
+          <textarea id="workDesc" rows="4" placeholder="Décrivez votre travail, les défis, les résultats..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label>Catégorie *</label>
+          <select id="workCategory" required>
+            <option value="">-- Sélectionner --</option>
+            <option value="video">Vidéo</option>
+            <option value="design">Design</option>
+            <option value="web">Web</option>
+            <option value="photo">Photo</option>
+            <option value="musique">Musique</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>URL du travail (image/vidéo) *</label>
+          <input type="url" id="workUrl" placeholder="https://..." required />
+        </div>
+        <div class="form-group">
+          <label>Date de réalisation</label>
+          <input type="date" id="workDate" />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Ajouter l'œuvre</button>
+        </div>
+        <p id="workFormStatus"></p>
+      </form>
+    </div>
+
+  </main>
+
+  <script>
+    function showTab(tabName) {
+      // Masquer tous
+      document.querySelectorAll(".portfolio-content").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".portfolio-tab").forEach(el => el.classList.remove("active"));
+      
+      // Afficher la sélectionnée
+      document.getElementById(tabName)?.classList.add("active");
+      event.target.classList.add("active");
+    }
+
+    // Mock data certifications
+    const mockCertifications = [
+      {
+        id: 1,
+        title: "Certification Google Ads",
+        issuer: "Google",
+        date: "2026-02-15",
+        verified: true,
+        badge: "🎓"
+      },
+      {
+        id: 2,
+        title: "Adobe Premiere Pro",
+        issuer: "Udemy",
+        date: "2026-01-20",
+        verified: false,
+        badge: "📹"
+      }
+    ];
+
+    // Mock data portfolio
+    const mockPortfolio = [
+      {
+        id: 1,
+        title: "Montage vidéo - Pub Smartphone",
+        desc: "Montage créatif de 30 secondes avec effets 3D",
+        category: "video",
+        image: "🎬"
+      },
+      {
+        id: 2,
+        title: "Site E-commerce",
+        desc: "Développement complet avec React et Firebase",
+        category: "web",
+        image: "💻"
+      }
+    ];
+
+    document.getElementById("addCertForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const status = document.getElementById("certFormStatus");
+      status.textContent = "✅ Certification ajoutée avec succès!";
+      status.className = "status success";
+      setTimeout(() => {
+        document.getElementById("addCertForm").reset();
+        loadCertifications();
+        showTab("certifications");
+      }, 1000);
+    });
+
+    document.getElementById("addWorkForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const status = document.getElementById("workFormStatus");
+      status.textContent = "✅ Œuvre ajoutée au portfolio!";
+      status.className = "status success";
+      setTimeout(() => {
+        document.getElementById("addWorkForm").reset();
+        loadPortfolio();
+        showTab("portfolio");
+      }, 1000);
+    });
+
+    function loadCertifications() {
+      const certsList = document.getElementById("certsList");
+      certsList.innerHTML = mockCertifications.map(cert => `
+        <div class="cert-card">
+          <div class="cert-badge">${cert.badge}</div>
+          <div class="cert-title">${cert.title}</div>
+          <div class="cert-issuer">${cert.issuer}</div>
+          <div class="cert-date">${new Date(cert.date).toLocaleDateString()}</div>
+          ${cert.verified ? '<div style="color: #4caf50; margin-top: 5px; font-weight: 600;">✓ Vérifiée</div>' : ''}
+          <div class="cert-action">
+            <button class="btn btn-secondary" onclick="alert('Partager cette certification')">Partager</button>
+          </div>
+        </div>
+      `).join("");
+      document.getElementById("certsStatus").textContent = "";
+    }
+
+    function loadPortfolio() {
+      const portfolioList = document.getElementById("portfolioList");
+      portfolioList.innerHTML = mockPortfolio.map(work => `
+        <div class="portfolio-item" onclick="viewWork(${work.id})">
+          <div class="portfolio-image">${work.image}</div>
+          <div class="portfolio-info">
+            <div class="portfolio-title">${work.title}</div>
+            <div class="portfolio-desc">${work.desc}</div>
+            <small style="color: #999;">${work.category}</small>
+          </div>
+        </div>
+      `).join("");
+      document.getElementById("portfolioStatus").textContent = "";
+    }
+
+    function viewWork(workId) {
+      alert(`Détails de l'œuvre #${workId}`);
+    }
+
+    loadCertifications();
+    loadPortfolio();
+  </script>
+</body>
+</html>

@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Détail de la commande</title>
+    <link rel="stylesheet" href="/sarbi_rohek/styles.css" />
+    <style>
+      .order-detail-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+
+      .order-detail-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+      }
+
+      .order-detail-header h1 {
+        margin: 0 0 0.5rem 0;
+        font-size: 2rem;
+      }
+
+      .order-detail-header p {
+        margin: 0.25rem 0;
+        opacity: 0.9;
+      }
+
+      .order-sections {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+      }
+
+      .section {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 1.5rem;
+      }
+
+      .section-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 0.5rem;
+      }
+
+      .info-grid {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .info-item label {
+        font-weight: 500;
+        color: #555;
+      }
+
+      .info-item .value {
+        color: #333;
+        font-weight: 600;
+      }
+
+      .messages-container {
+        background: #f5f5f5;
+        border-radius: 4px;
+        padding: 1rem;
+        max-height: 400px;
+        overflow-y: auto;
+        margin-bottom: 1rem;
+      }
+
+      .message {
+        background: white;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        border-radius: 4px;
+        border-left: 3px solid #667eea;
+      }
+
+      .message.client {
+        border-left-color: #4caf50;
+      }
+
+      .message.provider {
+        border-left-color: #ff9800;
+      }
+
+      .message-header {
+        font-size: 0.85rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+
+      .message-text {
+        color: #333;
+        line-height: 1.5;
+      }
+
+      .message-time {
+        font-size: 0.75rem;
+        color: #999;
+        margin-top: 0.5rem;
+      }
+
+      .message-form {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .message-form textarea {
+        flex: 1;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-family: inherit;
+      }
+
+      .message-form button {
+        align-self: flex-end;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+
+      .action-buttons .btn {
+        flex: 1;
+      }
+
+      .status-section {
+        background: #f9f9f9;
+        padding: 1rem;
+        border-radius: 4px;
+      }
+
+      .timeline {
+        position: relative;
+        padding-left: 2rem;
+      }
+
+      .timeline-item {
+        position: relative;
+        padding-bottom: 1.5rem;
+      }
+
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -2rem;
+        top: 0;
+        width: 12px;
+        height: 12px;
+        background: #ddd;
+        border-radius: 50%;
+        border: 2px solid white;
+      }
+
+      .timeline-item.active::before {
+        background: #667eea;
+      }
+
+      .timeline-item.completed::before {
+        background: #4caf50;
+      }
+
+      .timeline-label {
+        font-size: 0.9rem;
+        color: #666;
+        font-weight: 500;
+      }
+
+      @media (max-width: 768px) {
+        .order-sections {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <a href="/sarbi_rohek/index.html" class="nav-logo">Sarbi Rohek</a>
+      <div class="nav-right">
+        <a href="/sarbi_rohek/client-space.html">Retour au tableau de bord</a>
+      </div>
+    </nav>
+
+    <div class="order-detail-container">
+      <div id="loadingMsg" class="loading-state" style="display: none; text-align: center; padding: 2rem;">
+        <p>Chargement de la commande...</p>
+      </div>
+
+      <div id="orderDetailContent" style="display: none;">
+        <div class="order-detail-header">
+          <h1 id="orderTitle">Commande #</h1>
+          <p id="orderSubtitle"></p>
+        </div>
+
+        <div class="order-sections">
+          <div>
+            <!-- Section: Détails -->
+            <div class="section">
+              <div class="section-title">Détails de la commande</div>
+              <div class="info-grid">
+                <div class="info-item">
+                  <label>ID:</label>
+                  <span class="value" id="detailId">-</span>
+                </div>
+                <div class="info-item">
+                  <label>Prestataire:</label>
+                  <span class="value" id="detailProvider">-</span>
+                </div>
+                <div class="info-item">
+                  <label>Prix:</label>
+                  <span class="value" id="detailPrice">-</span>
+                </div>
+                <div class="info-item">
+                  <label>Livraison estimée:</label>
+                  <span class="value" id="detailDelivery">-</span>
+                </div>
+                <div class="info-item">
+                  <label>Révisions incluses:</label>
+                  <span class="value" id="detailRevisions">-</span>
+                </div>
+                <div class="info-item">
+                  <label>Statut:</label>
+                  <span class="value" id="detailStatus">-</span>
+                </div>
+                <div class="info-item">
+                  <label>Paiement:</label>
+                  <span class="value" id="detailPaymentStatus">-</span>
+                </div>
+              </div>
+              <div style="margin-top: 1.5rem;">
+                <div class="section-title" style="font-size: 1rem; border: none; padding: 0;">Description</div>
+                <p id="detailDescription" style="color: #666; line-height: 1.6; margin-top: 0.75rem;">-</p>
+              </div>
+            </div>
+
+            <!-- Section: Messages -->
+            <div class="section" style="margin-top: 2rem;">
+              <div class="section-title">Conversation</div>
+              <div class="messages-container" id="messagesContainer"></div>
+              <form id="addMessageForm" class="message-form" style="display: none;">
+                <textarea id="messageInput" placeholder="Votre message..." rows="3" required></textarea>
+                <button type="submit" class="btn btn-small btn-primary">Envoyer</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Sidebar -->
+          <div>
+            <!-- Section: Statut et actions -->
+            <div class="section">
+              <div class="section-title">Actions</div>
+              <div class="status-section" style="margin-bottom: 1.5rem;">
+                <div style="font-weight: 600; margin-bottom: 0.5rem;">Statut actuel</div>
+                <div
+                  id="currentStatus"
+                  style="
+                    font-size: 1.1rem;
+                    padding: 0.75rem;
+                    background: white;
+                    border-radius: 4px;
+                    text-align: center;
+                    margin-top: 0.5rem;
+                  "
+                >
+                  -
+                </div>
+              </div>
+
+              <div id="actionButtons" class="action-buttons" style="flex-direction: column; gap: 0.5rem;">
+                <!-- Les boutons seront générés dynamiquement -->
+              </div>
+            </div>
+
+            <!-- Section: Progression -->
+            <div class="section" style="margin-top: 2rem;">
+              <div class="section-title">Progression</div>
+              <div class="timeline">
+                <div class="timeline-item completed">
+                  <div class="timeline-label">Demande créée</div>
+                </div>
+                <div class="timeline-item" id="timelinePending">
+                  <div class="timeline-label">En attente de détails</div>
+                </div>
+                <div class="timeline-item" id="timelinePayment">
+                  <div class="timeline-label">Paiement</div>
+                </div>
+                <div class="timeline-item" id="timelineProgress">
+                  <div class="timeline-label">En cours</div>
+                </div>
+                <div class="timeline-item" id="timelineDelivered">
+                  <div class="timeline-label">Livrée</div>
+                </div>
+                <div class="timeline-item" id="timelineCompleted">
+                  <div class="timeline-label">Terminée</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="errorMsg" class="error-state" style="display: none; text-align: center; padding: 2rem; color: #d32f2f;">
+        <p>Impossible de charger la commande. Veuillez vérifier l'URL.</p>
+      </div>
+    </div>
+
+    <script src="/sarbi_rohek/styles.css" defer></script>
+    <script>
+      function getUrlParam(param) {
+        const params = new URLSearchParams(window.location.search);
+        return params.get(param);
+      }
+
+      function formatDate(dateString) {
+        try {
+          const date = new Date(dateString);
+          return date.toLocaleDateString("fr-FR");
+        } catch (e) {
+          return dateString;
+        }
+      }
+
+      function esc(text) {
+        if (!text) return "";
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function getStatusLabel(status) {
+        const labels = {
+          draft: "Brouillon",
+          pending_details: "En attente de détails",
+          pending_payment: "En attente de paiement",
+          paid: "Payée",
+          in_progress: "En cours",
+          delivered: "Livrée",
+          in_revision: "En révision",
+          completed: "Terminée",
+          cancelled: "Annulée",
+        };
+        return labels[status] || status;
+      }
+
+      function loadOrderDetail() {
+        const orderId = getUrlParam("id");
+        if (!orderId) {
+          document.getElementById("errorMsg").style.display = "block";
+          return;
+        }
+
+        document.getElementById("loadingMsg").style.display = "block";
+
+        fetch(`/sarbi_rohek/api/orders/detail/${orderId}`, {
+          method: "GET",
+          credentials: "include",
+        })
+          .then((r) => {
+            if (r.status === 404) {
+              throw new Error("Commande introuvable");
+            }
+            if (r.status === 401) {
+              window.location.href = "/sarbi_rohek/login.html";
+              return null;
+            }
+            return r.json();
+          })
+          .then((data) => {
+            if (!data || !data.order) {
+              document.getElementById("errorMsg").style.display = "block";
+              return;
+            }
+
+            renderOrderDetail(data.order, data.messages || []);
+            document.getElementById("loadingMsg").style.display = "none";
+            document.getElementById("orderDetailContent").style.display = "block";
+          })
+          .catch((err) => {
+            console.error("Erreur:", err);
+            document.getElementById("errorMsg").style.display = "block";
+            document.getElementById("loadingMsg").style.display = "none";
+          });
+      }
+
+      function renderOrderDetail(order, messages) {
+        document.getElementById("orderTitle").textContent = `Commande #${order.id}`;
+        document.getElementById(
+          "orderSubtitle"
+        ).textContent = `Créée le ${formatDate(order.createdAt)}`;
+
+        document.getElementById("detailId").textContent = order.id;
+        document.getElementById("detailProvider").textContent = esc(order.providerEmail);
+        document.getElementById("detailPrice").textContent = order.price ? `${order.price.toFixed(2)} TND` : "À confirmer";
+        document.getElementById("detailDelivery").textContent = order.estimatedDeliveryDate
+          ? formatDate(order.estimatedDeliveryDate)
+          : "À confirmer";
+        document.getElementById("detailRevisions").textContent = order.revisions || 0;
+        document.getElementById("detailStatus").textContent = getStatusLabel(order.status);
+        document.getElementById("detailPaymentStatus").textContent =
+          order.paymentStatus === "paid" ? "Payée" : "En attente";
+        document.getElementById("detailDescription").textContent = esc(order.description || "Aucune description");
+        document.getElementById("currentStatus").textContent = getStatusLabel(order.status);
+
+        renderMessages(messages);
+        updateTimeline(order.status);
+        renderActionButtons(order);
+
+        if (["pending_details", "pending_payment", "paid", "in_progress", "delivered"].includes(order.status)) {
+          document.getElementById("addMessageForm").style.display = "flex";
+        }
+      }
+
+      function renderMessages(messages) {
+        const container = document.getElementById("messagesContainer");
+        if (messages.length === 0) {
+          container.innerHTML = '<p style="text-align: center; color: #999;">Aucun message encore.</p>';
+          return;
+        }
+
+        container.innerHTML = messages
+          .map(
+            (msg) => `
+          <div class="message ${msg.senderEmail === currentUserEmail ? "client" : "provider"}">
+            <div class="message-header">${esc(msg.senderEmail)}</div>
+            <div class="message-text">${esc(msg.messageText)}</div>
+            <div class="message-time">${formatDate(msg.createdAt)}</div>
+          </div>
+        `
+          )
+          .join("");
+      }
+
+      function updateTimeline(status) {
+        const statusProgression = {
+          draft: [],
+          pending_details: ["pending"],
+          pending_payment: ["pending", "payment"],
+          paid: ["pending", "payment", "progress"],
+          in_progress: ["pending", "payment", "progress"],
+          delivered: ["pending", "payment", "progress", "delivered"],
+          in_revision: ["pending", "payment", "progress", "delivered"],
+          completed: ["pending", "payment", "progress", "delivered", "completed"],
+        };
+
+        const completed = statusProgression[status] || [];
+        ["pending", "payment", "progress", "delivered", "completed"].forEach((step) => {
+          const id = `timeline${step.charAt(0).toUpperCase() + step.slice(1)}`;
+          const el = document.getElementById(id);
+          if (el) {
+            el.classList.toggle("completed", completed.includes(step));
+            el.classList.toggle("active", !completed.includes(step));
+          }
+        });
+      }
+
+      function renderActionButtons(order) {
+        const container = document.getElementById("actionButtons");
+        const buttons = [];
+
+        if (order.status === "pending_payment" && order.paymentStatus === "pending") {
+          buttons.push(
+            `<button class="btn btn-primary" onclick="payOrder(${order.id})">Payer la commande</button>`
+          );
+        }
+
+        if (order.status === "delivered") {
+          buttons.push(
+            `<button class="btn btn-secondary" onclick="requestRevision(${order.id})">Demander une révision</button>`
+          );
+          buttons.push(
+            `<button class="btn btn-success" onclick="completeOrder(${order.id})">Valider et terminer</button>`
+          );
+        }
+
+        if (order.status === "in_revision") {
+          buttons.push(
+            `<button class="btn btn-success" onclick="completeOrder(${order.id})">Valider et terminer</button>`
+          );
+        }
+
+        if (buttons.length === 0) {
+          container.innerHTML = '<p style="color: #999; text-align: center;">Aucune action disponible.</p>';
+        } else {
+          container.innerHTML = buttons.join("");
+        }
+      }
+
+      function payOrder(orderId) {
+        if (!confirm("Confirmer le paiement?")) return;
+
+        fetch("/sarbi_rohek/api/orders/pay", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: `orderId=${orderId}`,
+        })
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.success) {
+              loadOrderDetail();
+              alert("Paiement effectué!");
+            } else {
+              alert("Erreur: " + (data.error || "Paiement échoué."));
+            }
+          })
+          .catch((err) => {
+            alert("Erreur lors du paiement.");
+          });
+      }
+
+      function requestRevision(orderId) {
+        if (!confirm("Demander une révision?")) return;
+
+        fetch("/sarbi_rohek/api/orders/request-revision", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: `orderId=${orderId}`,
+        })
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.success) {
+              loadOrderDetail();
+              alert("Révision demandée au prestataire!");
+            } else {
+              alert("Erreur: " + (data.error || "Impossible de demander une révision."));
+            }
+          });
+      }
+
+      function completeOrder(orderId) {
+        if (!confirm("Terminer la commande?")) return;
+
+        fetch("/sarbi_rohek/api/orders/complete", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: `orderId=${orderId}`,
+        })
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.success) {
+              loadOrderDetail();
+              alert("Commande terminée!");
+            } else {
+              alert("Erreur: " + (data.error || "Impossible de terminer la commande."));
+            }
+          });
+      }
+
+      let currentUserEmail = "";
+
+      fetch("/sarbi_rohek/api/auth/status", { credentials: "include" })
+        .then((r) => r.json())
+        .then((data) => {
+          if (data && data.email) {
+            currentUserEmail = data.email;
+          }
+        })
+        .finally(() => {
+          loadOrderDetail();
+        });
+
+      document.getElementById("addMessageForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const orderId = getUrlParam("id");
+        const text = document.getElementById("messageInput").value;
+
+        fetch("/sarbi_rohek/api/orders/add-message", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: `orderId=${orderId}&message=${encodeURIComponent(text)}`,
+        })
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.success) {
+              document.getElementById("messageInput").value = "";
+              loadOrderDetail();
+            }
+          });
+      });
+    </script>
+  </body>
+</html>

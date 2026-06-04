@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+  <main class="auth-page">
+    <section class="auth-layout">
+      <article class="auth-panel">
+        <p class="kicker">Sarbi Rohek</p>
+        <h2>Entrez dans votre espace en toute simplicite</h2>
+        <p class="panel-text">
+          Suivez vos commandes, discutez avec les prestataires et gerer vos services depuis un seul endroit.
+        </p>
+        <ul class="panel-list">
+          <li>Acces rapide a vos demandes</li>
+          <li>Historique et suivi centralises</li>
+          <li>Plateforme securisee et verifiee</li>
+        </ul>
+      </article>
+
+      <article class="auth-card">
+        <a class="btn ghost back-btn" href="index.html">Retour a l'accueil</a>
+        <div class="auth-head">
+          <h1>Connexion</h1>
+          <p>Accedez a votre compte client ou prestataire.</p>
+        </div>
+
+        <p id="flashMessage" class="flash-message" hidden></p>
+
+        <form id="loginForm" class="auth-form" action="/sarbi_rohek/api/login" method="post">
+          <label>
+            Adresse email
+            <input type="email" name="email" placeholder="exemple@email.com" required />
+          </label>
+
+          <label>
+            Mot de passe
+            <input type="password" name="password" minlength="8" placeholder="Minimum 8 caracteres" required />
+          </label>
+
+          <div class="auth-row">
+            <label class="remember">
+              <input type="checkbox" name="remember" />
+              Se souvenir de moi
+            </label>
+            <a class="text-link" href="#">Mot de passe oublie ?</a>
+          </div>
+
+          <div class="auth-actions">
+            <button class="btn primary" type="submit">Se connecter</button>
+            <a class="btn outline" href="register.html">Creer un compte</a>
+          </div>
+        </form>
+
+        <p class="auth-alt">
+          Vous n'avez pas encore de compte ?
+          <a href="register.html">Inscription</a>
+        </p>
+      </article>
+    </section>
+  </main>
+  <script src="login.js?v=20260325-4"></script>
+  <script src="chatbot-widget.js"></script>
+</body>
+</html>

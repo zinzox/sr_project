@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide Déploiement Pro - Sarbi Rohek</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+
+        header p {
+            color: #666;
+            font-size: 1.05em;
+        }
+
+        .section {
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #667eea;
+            font-size: 1.8em;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.25em;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab-btn {
+            padding: 12px 22px;
+            border: none;
+            background: #f5f5f5;
+            cursor: pointer;
+            font-size: 0.95em;
+            border-radius: 5px 5px 0 0;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        thead {
+            background: #667eea;
+            color: white;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .best {
+            background: #d4edda !important;
+            border-left: 5px solid #27ae60;
+        }
+
+        .price {
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 1.15em;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #f9f9f9 0%, #f5f5f5 100%);
+            padding: 18px;
+            margin: 12px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .card h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .card p {
+            margin: 6px 0;
+            font-size: 0.95em;
+        }
+
+        .card.best {
+            border-left-color: #27ae60;
+            background: linear-gradient(135deg, #d4edda 0%, #c6e0c6 100%);
+        }
+
+        .card.best h4 {
+            color: #27ae60;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .comparison-item h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.15em;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .info-label {
+            font-weight: 600;
+        }
+
+        .info-value {
+            text-align: right;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .feature-box {
+            background: #f9f9f9;
+            padding: 16px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+
+        .feature-box h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #667eea;
+            color: white;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin-right: 5px;
+            margin-top: 8px;
+        }
+
+        .badge.good {
+            background: #27ae60;
+        }
+
+        .badge.warning {
+            background: #f39c12;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .summary-box h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .summary-box li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .summary-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.6em;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Guide Déploiement Professionnel</h1>
+            <p>Solutions simples pour votre application Sarbi Rohek</p>
+        </header>
+
+        <!-- Section 1: Les 3 Options -->
+        <div class="section">
+            <h2>📊 Les 3 Options de Déploiement</h2>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('opt1')">Option 1: Budget</button>
+                <button class="tab-btn" onclick="switchTab('opt2')">Option 2: Équilibrée</button>
+                <button class="tab-btn" onclick="switchTab('opt3')">Option 3: Premium</button>
+            </div>
+
+            <!-- Option 1 -->
+            <div id="opt1" class="tab-content active">
+                <h3>💚 Option 1: Budget (< 200€/an)</h3>
+                <p style="margin: 15px 0; color: #666;">Idéal pour démarrer, peu d'utilisateurs</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Composant</th>
+                            <th>Technologie</th>
+                            <th>Coût</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Interface (Frontend)</strong></td>
+                            <td>HTML + CSS + JavaScript simple</td>
+                            <td>0€</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Serveur (Backend)</strong></td>
+                            <td>Java + Tomcat (votre système actuel)</td>
+                            <td>0€</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Base de données</strong></td>
+                            <td>MySQL (votre système actuel)</td>
+                            <td>0€</td>
+                        </tr>
+                        <tr class="best">
+                            <td><strong>Hébergement</strong></td>
+                            <td>OVH VPS (serveur français)</td>
+                            <td class="price">5€/mois</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 style="margin-top: 20px;">Détails du Budget</h3>
+                <table>
+                    <tr>
+                        <td>Hébergement VPS par mois</td>
+                        <td class="price">5€</td>
+                    </tr>
+                    <tr>
+                        <td>Nom de domaine par an</td>
+                        <td class="price">12€</td>
+                    </tr>
+                    <tr>
+                        <td>Certificat HTTPS gratuit</td>
+                        <td class="price">0€</td>
+                    </tr>
+                    <tr class="best">
+                        <td><strong>TOTAL PAR AN</strong></td>
+                        <td class="price"><strong>72€</strong></td>
+                    </tr>
+                </table>
+
+                <div class="summary-box" style="margin-top: 20px;">
+                    <h3>✅ Avantages</h3>
+                    <ul>
+                        <li>Très bon marché</li>
+                        <li>Hébergeur français</li>
+                        <li>Aucun changement de code</li>
+                        <li>Jusqu'à 10 000 utilisateurs</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Option 2 -->
+            <div id="opt2" class="tab-content">
+                <h3>🟡 Option 2: Équilibrée (~1 000€/an)</h3>
+                <p style="margin: 15px 0; color: #666;">Meilleur compromis prix/performance, croissance forte</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Composant</th>
+                            <th>Technologie</th>
+                            <th>Avantage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Interface (Frontend)</strong></td>
+                            <td>React 18 + TypeScript</td>
+                            <td>Moderne, rapide, réactif</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Serveur (Backend)</strong></td>
+                            <td>Spring Boot 3</td>
+                            <td>Evolution de Tomcat, plus pro</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cache rapide</strong></td>
+                            <td>Redis</td>
+                            <td>3x plus rapide site</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Base de données</strong></td>
+                            <td>MySQL 8 optimisé</td>
+                            <td>Plus stable</td>
+                        </tr>
+                        <tr class="best">
+                            <td><strong>Hébergement</strong></td>
+                            <td>Scaleway (français)</td>
+                            <td>Meilleur prix EU</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Distribution rapide</strong></td>
+                            <td>Bunny CDN</td>
+                            <td>Site rapide partout</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 style="margin-top: 20px;">Budget Détaillé</h3>
+                <div class="comparison-grid">
+                    <div class="comparison-item">
+                        <h3>Coûts Mensuels</h3>
+                        <div class="info-row">
+                            <span class="info-label">Hébergement:</span>
+                            <span class="info-value"><strong>50€</strong></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">CDN Distribution:</span>
+                            <span class="info-value"><strong>15€</strong></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Monitoring:</span>
+                            <span class="info-value"><strong>10€</strong></span>
+                        </div>
+                        <div class="info-row" style="border-top: 2px solid white; margin-top: 10px; padding-top: 10px;">
+                            <span class="info-label"><strong>Total/Mois:</strong></span>
+                            <span class="info-value"><strong>75€</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="comparison-item">
+                        <h3>Capacité</h3>
+                        <div class="info-row">
+                            <span class="info-label">Utilisateurs:</span>
+                            <span class="info-value"><strong>100 000+</strong></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Temps réponse:</span>
+                            <span class="info-value"><strong>&lt; 1 sec</strong></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Support:</span>
+                            <span class="info-value"><strong>Français</strong></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Sauvegarde:</span>
+                            <span class="info-value"><strong>Auto</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="summary-box" style="margin-top: 20px;">
+                    <h3>✅ Avantages</h3>
+                    <ul>
+                        <li>Beaucoup plus rapide</li>
+                        <li>Peut gérer 100 000+ utilisateurs</li>
+                        <li>Stack professionnel industrie</li>
+                        <li>Support 24h/24 disponible</li>
+                        <li>Données sauvegardées automatiquement</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Option 3 -->
+            <div id="opt3" class="tab-content">
+                <h3>🔴 Option 3: Premium (~6 500€/an)</h3>
+                <p style="margin: 15px 0; color: #666;">Pour très gros projets, sécurité maximale</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Composant</th>
+                            <th>Technologie</th>
+                            <th>Performance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Interface (Frontend)</strong></td>
+                            <td>Next.js 14</td>
+                            <td>Ultra moderne</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Serveur (Backend)</strong></td>
+                            <td>Spring Cloud Microservices</td>
+                            <td>Très scalable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Orchestration</strong></td>
+                            <td>Kubernetes</td>
+                            <td>Auto scaling</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cache</strong></td>
+                            <td>Redis Cluster</td>
+                            <td>Ultra rapide</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Base de données</strong></td>
+                            <td>PostgreSQL multi-région</td>
+                            <td>Très sûr</td>
+                        </tr>
+                        <tr class="best">
+                            <td><strong>CDN Mondial</strong></td>
+                            <td>CloudFlare Enterprise</td>
+                            <td>Partout rapide</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Monitoring 24/7</strong></td>
+                            <td>DataDog</td>
+                            <td>Alerte immédiate</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 style="margin-top: 20px;">Budget Détaillé</h3>
+                <div class="comparison-grid">
+                    <div class="comparison-item">
+                        <h3>Infrastructure</h3>
+                        <div class="info-row">
+                            <span class="info-label">Kubernetes:</span>
+                            <span class="info-value"><strong>250€</strong></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">PostgreSQL:</span>
+                            <span class="info-value"><strong>80€</strong></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Redis Cluster:</span>
+                            <span class="info-value"><strong>60€</strong></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">CDN Enterprise:</span>
+                            <span class="info-value"><strong>100€</strong></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Monitoring:</span>
+                            <span class="info-value"><strong>150€</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="comparison-item">
+                        <h3>Capacité Max</h3>
+                        <div class="info-row">
+                            <span class="info-label">Utilisateurs:</span>
+                            <span class="info-value"><strong>Millions</strong></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Temps réponse:</span>
+                            <span class="info-value"><strong>&lt; 200ms</strong></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Disponibilité:</span>
+                            <span class="info-value"><strong>99.99%</strong></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Support:</span>
+                            <span class="info-value"><strong>24h/24</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="summary-box" style="margin-top: 20px;">
+                    <h3>✅ Avantages</h3>
+                    <ul>
+                        <li>Ultra-rapide (< 200ms)</li>
+                        <li>Jamais offline (redondance complète)</li>
+                        <li>Support jour/nuit</li>
+                        <li>Sécurité maximale</li>
+                        <li>Millions d'utilisateurs simultanés</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Comparaison Rapide -->
+        <div class="section">
+            <h2>🎯 Comparaison Rapide</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Critère</th>
+                        <th>Option 1: Budget</th>
+                        <th>Option 2: Équilibrée</th>
+                        <th>Option 3: Premium</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Prix/Mois</strong></td>
+                        <td class="price">5-10€</td>
+                        <td class="price">75€</td>
+                        <td class="price">640€</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Prix/An</strong></td>
+                        <td class="price">~100€</td>
+                        <td class="price">~1 000€</td>
+                        <td class="price">~6 500€</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Utilisateurs Max</strong></td>
+                        <td>10 000</td>
+                        <td>100 000+</td>
+                        <td>Millions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vitesse Site</strong></td>
+                        <td><span class="badge medium">Moyenne</span></td>
+                        <td><span class="badge good">Rapide</span></td>
+                        <td><span class="badge good">Ultra rapide</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Support Technique</strong></td>
+                        <td>Email</td>
+                        <td>Chat + Phone</td>
+                        <td>24h/24 Dédié</td>
+                    </tr>
+                    <tr class="best">
+                        <td><strong>Temps Migration</strong></td>
+                        <td>1 semaine</td>
+                        <td>3-4 mois</td>
+                        <td>12+ mois</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 3: Ma Recommandation -->
+        <div class="section">
+            <h2>🏆 Recommandation Finale</h2>
+
+            <div class="summary-box">
+                <h3>⭐ CHOISIR: Option 2 (Équilibrée)</h3>
+                <ul>
+                    <li>Meilleur compromis prix et performance</li>
+                    <li>Votre projet est en croissance</li>
+                    <li>React + Spring Boot = standard industrie</li>
+                    <li>Budget: ~1 000€/an seulement</li>
+                    <li>Peut supporter 100 000+ utilisateurs</li>
+                </ul>
+            </div>
+
+            <h3 style="margin-top: 20px;">🚀 Plan d'Action (3-4 mois)</h3>
+
+            <div class="card">
+                <h4>Mois 1: Préparation</h4>
+                <p>Optimiser Java/Tomcat actuel, ajouter cache Redis</p>
+            </div>
+
+            <div class="card">
+                <h4>Mois 2-3: Frontend React</h4>
+                <p>Convertir JavaScript simple → React moderne</p>
+            </div>
+
+            <div class="card">
+                <h4>Mois 4: Migration Hébergement</h4>
+                <p>Passer à Scaleway, configurer monitoring</p>
+            </div>
+
+            <div class="card best">
+                <h4>✅ Résultat Final</h4>
+                <p><strong>Application professionnelle, rapide, prête à croître!</strong></p>
+            </div>
+        </div>
+
+        <!-- Section 4: Glossaire -->
+        <div class="section">
+            <h2>🔤 Termes Expliqués Simplement</h2>
+
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <h4>React 18</h4>
+                    <p>Outil pour créer des interfaces web modernes et réactives</p>
+                    <span class="badge">Frontend</span>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Spring Boot</h4>
+                    <p>Framework Java professionnel pour construire serveurs robustes</p>
+                    <span class="badge">Backend</span>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Redis</h4>
+                    <p>Stockage ultra-rapide temporaire (cache) pour vitesse accrue</p>
+                    <span class="badge">Performance</span>
+                </div>
+
+                <div class="feature-box">
+                    <h4>CDN / Bunny</h4>
+                    <p>Distribue votre site partout = plus rapide pour tous les utilisateurs</p>
+                    <span class="badge">Distribution</span>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Kubernetes</h4>
+                    <p>Système qui lance automatiquement plus de serveurs quand besoin</p>
+                    <span class="badge">Scalabilité</span>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Scaleway</h4>
+                    <p>Hébergeur français. Meilleur prix en Europe pour qualité équivalente</p>
+                    <span class="badge">Hébergement</span>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Monitoring</h4>
+                    <p>Surveillance 24/7 = alerte automatique si quelque chose casse</p>
+                    <span class="badge">Sécurité</span>
+                </div>
+
+                <div class="feature-box">
+                    <h4>HTTPS/SSL</h4>
+                    <p>Sécurité: vos données privées sont cryptées (petit cadenas vert)</p>
+                    <span class="badge">Sécurité</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>✨ Guide Professionnel - Avril 2026</p>
+            <p>Solution optimale pour votre projet Sarbi Rohek</p>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
